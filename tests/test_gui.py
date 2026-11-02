@@ -240,7 +240,8 @@ def test_full_generation_writes_files_and_shows_the_summary(harness):
     assert "Possibles assentaments duplicats" in log
     assert str(app.open_button["state"]) == "normal"
     assert str(app.generate_button["state"]) == "normal"
-    assert app.status["text"] == "Dossier generat."
+    assert app.status["text"].startswith("Dossier generat. Hi ha ")
+    assert "avisos" in app.status["text"]
 
 
 @needs_display

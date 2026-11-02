@@ -204,6 +204,7 @@
   "gui.missing_key": "Escriviu la clau d'API.",
   "gui.missing_folder": "Trieu la carpeta on desar els fitxers.",
   "gui.finished": "Dossier generat.",
+  "gui.finished_notices": "Hi ha {count} avisos: baixeu per la llista per revisar-los.",
   "gui.oversize_title": "PDF molt gran",
   "gui.oversize_question": "El PDF fa {size} MB, més de {limit} MB. Voleu dividir-lo en un PDF per trimestre?",
   "gui.close_title": "Sortir",

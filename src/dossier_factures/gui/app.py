@@ -36,6 +36,8 @@ from .tasks import TaskRunner
 logger = logging.getLogger(__name__)
 
 POLL_MS = 80
+WINDOW_HEIGHT = 720
+MIN_WINDOW_HEIGHT = 600
 PADDING = 8
 OK_COLOR = "#1E7B34"
 ERROR_COLOR = "#B3261E"
@@ -91,8 +93,10 @@ class App:
         self._connected_as: tuple | None = None
 
         root.title(f"{t('gui.title')} {__version__}")
-        root.minsize(760, 640)
-        root.geometry("840x720")
+        # Taskbar and title bar take about 100 px: the buttons must stay visible on a small laptop.
+        height = min(WINDOW_HEIGHT, root.winfo_screenheight() - 100)
+        root.minsize(760, min(MIN_WINDOW_HEIGHT, height))
+        root.geometry(f"840x{height}")
         root.protocol("WM_DELETE_WINDOW", self.on_close)
         root.columnconfigure(0, weight=1)
         root.rowconfigure(2, weight=1)
@@ -240,7 +244,9 @@ class App:
         self.progress = ttk.Progressbar(frame, mode="determinate")
         self.progress.grid(row=1, column=0, columnspan=2, sticky="ew", pady=4)
 
-        self.log = tk.Text(frame, height=8, wrap="word", state="disabled", relief="flat")
+        self.log = tk.Text(
+            frame, height=6, wrap="word", state="disabled", relief="flat", font="TkDefaultFont"
+        )
         self.log.grid(row=2, column=0, sticky="nsew")
         scrollbar = ttk.Scrollbar(frame, command=self.log.yview)
         scrollbar.grid(row=2, column=1, sticky="ns")
@@ -505,7 +511,10 @@ class App:
         self.result = result
         self.last_folder = result.folder
         self._finish_running()
-        self.status.configure(text=t("gui.finished"))
+        finished = t("gui.finished")
+        if result.notices:
+            finished = f"{finished} {t('gui.finished_notices', count=len(result.notices))}"
+        self.status.configure(text=finished)
         self._write_log(summary_lines(result), replace=True)
         self.open_button.configure(state="normal")
         self._refresh_buttons()
