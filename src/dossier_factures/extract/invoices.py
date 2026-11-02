@@ -34,7 +34,7 @@ MOVE_FIELDS = [
 ]
 
 
-def base_domain(include_receipts: bool = False) -> list:
+def base_domain(include_receipts: bool = True) -> list:
     types = [*MOVE_TYPES, RECEIPT_TYPE] if include_receipts else MOVE_TYPES
     return [("move_type", "in", types), ("state", "=", "posted")]
 

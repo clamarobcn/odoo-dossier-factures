@@ -38,7 +38,7 @@ def codes(dossier, name):
 
 def test_only_posted_supplier_invoices_of_the_year_and_company(dossier):
     names = {i.name for i in dossier.invoices}
-    assert len(names) == 12
+    assert len(names) == 13
     assert "/" not in names
     assert "FC/2098/12/0001" not in names
     assert "FV/2099/01/0001" not in names
@@ -49,7 +49,7 @@ def test_order_is_natural_and_numbers_are_consecutive(dossier):
     names = [i.name for i in dossier.invoices]
     assert names.index("FC/2099/05/999") < names.index("FC/2099/05/1000")
     assert names[-1] == "RFC/2099/03/0001"
-    assert [i.order_number for i in dossier.invoices] == list(range(1, 13))
+    assert [i.order_number for i in dossier.invoices] == list(range(1, 14))
 
 
 def test_sort_key_handles_missing_name():
@@ -78,7 +78,18 @@ def test_totals_add_up(dossier):
     assert dossier.total == sum((i.total for i in dossier.invoices), Decimal(0))
     assert (
         dossier.total
-        == Decimal("121") * 2 + 300 + 700 + Decimal("60.5") - 40 + 100 + 80 + 55 + 100 + 30 + 20
+        == Decimal("121") * 2
+        + 300
+        + 700
+        + Decimal("60.5")
+        - 40
+        + 100
+        + 80
+        + 55
+        + 100
+        + 30
+        + 20
+        + 15
     )
     assert dossier.total_untaxed + dossier.total_tax == dossier.total
 
@@ -360,14 +371,14 @@ def test_pagination_reads_everything(backend, scenario):
     assert len(backend.search_read_all("res.partner", [], ["name"])) == 450
 
 
-def test_receipts_are_left_out_by_default_with_a_notice(dossier):
+def test_receipts_can_be_left_out_with_a_notice(backend):
+    dossier = extract_dossier(backend, ExtractParams(YEAR, include_receipts=False))
     assert "FC/2099/06/0001" not in {i.name for i in dossier.invoices}
     notice = next(n for n in dossier.notices if n.code is NoticeCode.RECEIPTS_EXCLUDED)
     assert notice.params == {"count": 1, "total": "15,00"}
 
 
-def test_receipts_can_be_included_even_without_a_supplier(backend):
-    dossier = extract_dossier(backend, ExtractParams(YEAR, include_receipts=True))
+def test_receipts_are_included_by_default_even_without_a_supplier(dossier):
     receipt = by_name(dossier, "FC/2099/06/0001")
     assert receipt.is_receipt
     assert receipt.total == Decimal("15.00")
@@ -380,5 +391,6 @@ def test_receipts_can_be_included_even_without_a_supplier(backend):
 
 
 def test_excluded_receipts_follow_the_supplier_filter(backend):
-    dossier = extract_dossier(backend, ExtractParams(YEAR, supplier_id=2))
+    params = ExtractParams(YEAR, supplier_id=2, include_receipts=False)
+    dossier = extract_dossier(backend, params)
     assert NoticeCode.RECEIPTS_EXCLUDED not in {n.code for n in dossier.notices}

@@ -33,6 +33,7 @@ class NoticeCode(StrEnum):
     FOREIGN_CURRENCY = "foreign_currency"
     MISSING_SUPPLIER = "missing_supplier"
     RECEIPTS_EXCLUDED = "receipts_excluded"
+    DOCUMENT_UNREADABLE = "document_unreadable"
 
 
 @dataclass(frozen=True)
@@ -140,7 +141,7 @@ class ExtractParams:
     company_id: int | None = None
     analytic_account_id: int | None = None
     supplier_id: int | None = None
-    include_receipts: bool = False
+    include_receipts: bool = True
 
 
 @dataclass

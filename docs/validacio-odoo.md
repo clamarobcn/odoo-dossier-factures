@@ -16,6 +16,12 @@ Active payments linked through `matched_payment_ids` but not reconciled are repo
 
 The label of `payment_method_line_id` repeats the journal name, so the plain name is read from `account.payment.method.line`.
 
+## Purchase receipts
+
+Purchase receipts (`in_receipt`) share the journal and the numbering of vendor bills. Leaving them out shows up as gaps in the numbering, so the dossier includes them by default and marks them. They may have no supplier.
+
+Expenses booked as plain journal entries (payroll, bank fees) have no supplier document and stay out of the dossier.
+
 ## Attachments
 
 - `ir.attachment.datas` no longer exists on saas~19.3: reading it returns an error. The content is in `raw`, as base64. The field is detected with `fields_get`, so older versions keep working.

@@ -4,7 +4,7 @@ from datetime import date
 from decimal import Decimal
 
 from .i18n import t
-from .model import Dossier
+from .model import Dossier, Payment
 
 
 def format_amount(amount: Decimal) -> str:
@@ -14,6 +14,10 @@ def format_amount(amount: Decimal) -> str:
 
 def format_date(value: date) -> str:
     return value.strftime("%d/%m/%Y")
+
+
+def payment_form_label(payment: Payment) -> str:
+    return " – ".join(part for part in (payment.form, payment.method) if part)
 
 
 def describe_filters(dossier: Dossier) -> str:

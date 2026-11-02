@@ -24,6 +24,7 @@ from .i18n import t
 from .model import ExtractParams
 from .odoo_client import Json2Backend, OdooError, guess_database, normalize_base_url
 from .paths import new_output_folder
+from .pipeline import GenerateOptions, generate
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -46,14 +47,24 @@ def _build_parser() -> argparse.ArgumentParser:
     extract.add_argument("--project", type=int, help="Id del compte analític")
     extract.add_argument("--supplier", type=int, help="Id del proveïdor")
     extract.add_argument("--json", type=Path, help="Desa les dades en un fitxer JSON")
-    extract.add_argument("--include-receipts", action="store_true", help=t("cli.help.receipts"))
+    extract.add_argument("--only-invoices", action="store_true", help=t("cli.help.only_invoices"))
 
     excel = commands.add_parser("excel", help=t("cli.help.excel"))
     excel.add_argument("--year", type=int, required=True)
     excel.add_argument("--project", type=int, help="Id del compte analític")
     excel.add_argument("--supplier", type=int, help="Id del proveïdor")
     excel.add_argument("--out", type=Path, required=True, help=t("cli.help.out"))
-    excel.add_argument("--include-receipts", action="store_true", help=t("cli.help.receipts"))
+    excel.add_argument("--only-invoices", action="store_true", help=t("cli.help.only_invoices"))
+
+    generate_parser = commands.add_parser("generate", help=t("cli.help.generate"))
+    generate_parser.add_argument("--year", type=int, required=True)
+    generate_parser.add_argument("--project", type=int, help="Id del compte analític")
+    generate_parser.add_argument("--supplier", type=int, help="Id del proveïdor")
+    generate_parser.add_argument("--out", type=Path, required=True, help=t("cli.help.out"))
+    generate_parser.add_argument(
+        "--only-invoices", action="store_true", help=t("cli.help.only_invoices")
+    )
+    generate_parser.add_argument("--cache-dir", type=Path, help=t("cli.help.cache"))
     return parser
 
 
@@ -77,7 +88,7 @@ def _print_test(backend: Json2Backend) -> None:
 
 
 def _print_extract(backend: Json2Backend, args: argparse.Namespace, config: AppConfig) -> None:
-    params = ExtractParams(args.year, None, args.project, args.supplier, args.include_receipts)
+    params = ExtractParams(args.year, None, args.project, args.supplier, not args.only_invoices)
     dossier = extract_dossier(backend, params, config.payment_form_overrides, progress=print)
     print(f"{t('cli.company')}: {dossier.company.name}")
     print(f"{t('cli.invoices')}: {len(dossier.invoices)}")
@@ -97,11 +108,30 @@ def _print_extract(backend: Json2Backend, args: argparse.Namespace, config: AppC
 
 
 def _print_excel(backend: Json2Backend, args: argparse.Namespace, config: AppConfig) -> None:
-    params = ExtractParams(args.year, None, args.project, args.supplier, args.include_receipts)
+    params = ExtractParams(args.year, None, args.project, args.supplier, not args.only_invoices)
     dossier = extract_dossier(backend, params, config.payment_form_overrides, progress=print)
     path = new_output_folder(args.out, args.year) / excel_filename(args.year)
     build_workbook(dossier, path)
     print(f"{t('cli.saved')} {path}")
+
+
+def _print_generate(backend: Json2Backend, args: argparse.Namespace, config: AppConfig) -> None:
+    params = ExtractParams(args.year, None, args.project, args.supplier, not args.only_invoices)
+    options = GenerateOptions(args.out, config.payment_form_overrides, args.cache_dir)
+    last = {"message": ""}
+
+    def progress(message: str, current: int | None = None, total: int | None = None) -> None:
+        if message != last["message"]:
+            print(message, flush=True)
+            last["message"] = message
+
+    result = generate(backend, params, options, progress)
+    print(f"{t('cli.invoices')}: {len(result.dossier.invoices)}")
+    print(f"{t('cli.total')}: {format_amount(result.dossier.total)} €")
+    print(f"{t('cli.pages')}: {result.page_count}")
+    for code, count in Counter(n.code for n in result.notices).items():
+        print(f"  {count} x {code}")
+    print(f"{t('cli.saved')} {result.folder}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -127,6 +157,8 @@ def main(argv: list[str] | None = None) -> int:
             _print_extract(backend, args, config)
         elif args.command == "excel":
             _print_excel(backend, args, config)
+        elif args.command == "generate":
+            _print_generate(backend, args, config)
     except OdooError as error:
         print(t(error.i18n_key), file=sys.stderr)
         if args.verbose and error.detail:

@@ -1,3 +1,4 @@
+import os
 import re
 from datetime import date
 from decimal import Decimal
@@ -77,7 +78,7 @@ def test_title_block_shows_entity_year_filters_and_date(dossier, tmp_path):
     ws = Register(build(dossier, tmp_path)).ws
     assert ws["A1"].value == "Entitat d'Exemple · NIF G00000000"
     assert ws["A2"].value == "Registre de factures de proveïdors · Exercici 2099"
-    assert ws["A3"].value == "Sense filtres"
+    assert ws["A3"].value == "Inclou rebuts de compra"
     assert ws["A4"].value == "Generat el 31/12/2099"
 
 
@@ -85,16 +86,16 @@ def test_filters_are_described(backend, tmp_path):
     dossier = extract_dossier(backend, ExtractParams(YEAR, analytic_account_id=7, supplier_id=1))
     assert (
         Register(build(dossier, tmp_path)).ws["A3"].value
-        == "Projecte: Projecte Set · Proveïdor: Proveïdor Àlfa"
+        == "Projecte: Projecte Set · Proveïdor: Proveïdor Àlfa · Inclou rebuts de compra"
     )
 
 
 def test_every_invoice_appears_once_with_amounts(dossier, tmp_path):
     register = Register(build(dossier, tmp_path))
     numbered = [n for n in register.column("Núm. d'ordre")]
-    assert sorted(set(numbered)) == list(range(1, 13))
+    assert sorted(set(numbered)) == list(range(1, 14))
     amounts = [v for v in register.column("Total") if v is not None]
-    assert len(amounts) == 12
+    assert len(amounts) == 13
     assert sum(Decimal(str(v)) for v in amounts) == dossier.total
 
 
@@ -220,7 +221,7 @@ def test_stored_results_match_what_the_formula_would_calculate(dossier, tmp_path
 def test_totals_row_counts_invoices(dossier, tmp_path):
     register = Register(build(dossier, tmp_path))
     assert register.value(register.last, "Registre intern") == "Total"
-    assert register.value(register.last, "Proveïdor") == "12 factures"
+    assert register.value(register.last, "Proveïdor") == "13 factures i rebuts"
 
 
 def test_print_and_freeze_setup(dossier, tmp_path):
@@ -273,7 +274,7 @@ def test_ampersand_in_entity_name_survives_the_print_footer(dossier, tmp_path):
 def test_empty_dossier_still_produces_a_valid_file(backend, tmp_path):
     empty = extract_dossier(backend, ExtractParams(1990))
     register = Register(build(empty, tmp_path), data_only=True)
-    assert register.value(register.last, "Proveïdor") == "0 factures"
+    assert register.value(register.last, "Proveïdor") == "0 factures i rebuts"
 
 
 def test_failure_leaves_no_partial_file(dossier, tmp_path, monkeypatch):
@@ -295,11 +296,22 @@ def test_output_folder_is_named_and_never_reused(tmp_path):
     assert second.is_dir()
 
 
-def test_receipts_are_marked_and_described_when_included(backend, tmp_path):
-    dossier = extract_dossier(backend, ExtractParams(YEAR, include_receipts=True))
+def test_only_invoices_is_described_as_no_filter(backend, tmp_path):
+    dossier = extract_dossier(backend, ExtractParams(YEAR, include_receipts=False))
+    register = Register(build(dossier, tmp_path))
+    assert register.ws["A3"].value == "Sense filtres"
+    assert register.value(register.last, "Proveïdor") == "12 factures"
+
+
+def test_receipts_are_marked_and_described(dossier, tmp_path):
     register = Register(build(dossier, tmp_path))
     row = register.rows_of("FC/2099/06/0001")[0]
     assert register.value(row, "Observacions") == "Rebut de compra"
     assert register.value(row, "Proveïdor") in ("", None)
     assert register.ws["A3"].value == "Inclou rebuts de compra"
     assert register.value(register.last, "Proveïdor") == "13 factures i rebuts"
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permissions")
+def test_file_is_readable_by_other_users_like_any_saved_document(dossier, tmp_path):
+    assert build(dossier, tmp_path).stat().st_mode & 0o044 == 0o044

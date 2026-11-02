@@ -19,7 +19,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
-from .formatting import describe_filters, format_date
+from .formatting import describe_filters, format_date, payment_form_label
 from .i18n import t
 from .model import Dossier, Invoice, Payment
 
@@ -82,10 +82,6 @@ def _clean(text: str) -> str:
 def _money_format(currency: str) -> str:
     symbol = SYMBOLS.get(currency, currency)
     return f'#,##0.00\\ "{symbol}";[Red]-#,##0.00\\ "{symbol}"'
-
-
-def _payment_form_label(payment: Payment) -> str:
-    return " – ".join(part for part in (payment.form, payment.method) if part)
 
 
 def _remarks(invoice: Invoice, document_remarks: dict[int, str]) -> str:
@@ -191,7 +187,7 @@ def _write_identity(
 
 def _write_payment(sheet: _Sheet, row: int, payment: Payment) -> None:
     sheet.date(row, "payment_date", payment.date)
-    sheet.text(row, "payment_form", _payment_form_label(payment))
+    sheet.text(row, "payment_form", payment_form_label(payment))
     sheet.amount(row, "amount_paid", payment.amount)
 
 
@@ -364,12 +360,8 @@ def build_workbook(
 
     # Written next to the target and swapped in, so a failure never leaves half a file.
     path = Path(path)
-    descriptor, temporary = tempfile.mkstemp(suffix=".xlsx", dir=path.parent)
-    os.close(descriptor)
-    try:
+    with tempfile.TemporaryDirectory(dir=path.parent) as work:
+        temporary = Path(work) / path.name
         workbook.save(temporary)
-        _store_results(Path(temporary), results)
+        _store_results(temporary, results)
         os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
