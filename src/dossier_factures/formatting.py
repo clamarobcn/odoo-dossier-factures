@@ -3,6 +3,9 @@
 from datetime import date
 from decimal import Decimal
 
+from .i18n import t
+from .model import Dossier
+
 
 def format_amount(amount: Decimal) -> str:
     """Return ``1.234,56``, the convention in Catalan."""
@@ -11,3 +14,14 @@ def format_amount(amount: Decimal) -> str:
 
 def format_date(value: date) -> str:
     return value.strftime("%d/%m/%Y")
+
+
+def describe_filters(dossier: Dossier) -> str:
+    parts = []
+    if dossier.analytic_account_name:
+        parts.append(t("filters.project", name=dossier.analytic_account_name))
+    if dossier.supplier_name:
+        parts.append(t("filters.supplier", name=dossier.supplier_name))
+    if dossier.params.include_receipts:
+        parts.append(t("filters.receipts"))
+    return " · ".join(parts) or t("filters.none")

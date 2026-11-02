@@ -31,6 +31,8 @@ class NoticeCode(StrEnum):
     UNRECONCILED_PAYMENT = "unreconciled_payment"
     PAYMENT_MISMATCH = "payment_mismatch"
     FOREIGN_CURRENCY = "foreign_currency"
+    MISSING_SUPPLIER = "missing_supplier"
+    RECEIPTS_EXCLUDED = "receipts_excluded"
 
 
 @dataclass(frozen=True)
@@ -93,7 +95,7 @@ class Invoice:
     id: int
     name: str
     ref: str
-    partner_id: int
+    partner_id: int | None
     partner_name: str
     partner_vat: str
     invoice_date: date
@@ -116,6 +118,10 @@ class Invoice:
         return self.move_type == "in_refund"
 
     @property
+    def is_receipt(self) -> bool:
+        return self.move_type == "in_receipt"
+
+    @property
     def amount_paid(self) -> Decimal:
         return sum((p.amount for p in self.payments), Decimal("0.00"))
 
@@ -134,6 +140,7 @@ class ExtractParams:
     company_id: int | None = None
     analytic_account_id: int | None = None
     supplier_id: int | None = None
+    include_receipts: bool = False
 
 
 @dataclass

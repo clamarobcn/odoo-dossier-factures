@@ -5,6 +5,7 @@ from collections.abc import Callable
 from datetime import date
 from typing import Any
 
+from ..formatting import format_amount
 from ..i18n import t
 from ..model import Company, Dossier, ExtractParams, Invoice, Notice, NoticeCode, money
 from ..odoo_client import OdooBackend
@@ -13,6 +14,7 @@ from .attachments import select_attachments
 from .payments import fetch_payments
 
 MOVE_TYPES = ["in_invoice", "in_refund"]
+RECEIPT_TYPE = "in_receipt"
 MOVE_FIELDS = [
     "amount_tax_signed",
     "amount_total",
@@ -32,8 +34,9 @@ MOVE_FIELDS = [
 ]
 
 
-def base_domain() -> list:
-    return [("move_type", "in", MOVE_TYPES), ("state", "=", "posted")]
+def base_domain(include_receipts: bool = False) -> list:
+    types = [*MOVE_TYPES, RECEIPT_TYPE] if include_receipts else MOVE_TYPES
+    return [("move_type", "in", types), ("state", "=", "posted")]
 
 
 def year_domain(year: int) -> list:
@@ -64,14 +67,15 @@ def _resolve_company(backend: OdooBackend, company_id: int | None) -> Company:
 
 
 def _to_invoice(move: dict[str, Any], partner: dict[str, Any]) -> Invoice:
+    # Purchase receipts may have no supplier, so the partner can be empty.
     sign = -1 if move["move_type"] == "in_refund" else 1
     return Invoice(
         id=move["id"],
         name=move["name"],
         ref=move["ref"] or "",
-        partner_id=move["partner_id"][0],
-        partner_name=partner["name"] or "",
-        partner_vat=partner["vat"] or "",
+        partner_id=move["partner_id"][0] if move["partner_id"] else None,
+        partner_name=partner.get("name") or "",
+        partner_vat=partner.get("vat") or "",
         invoice_date=date.fromisoformat(move["invoice_date"]),
         # Signed fields are in company currency; the sign depends on the move type.
         untaxed=money(abs(move["amount_untaxed_signed"])) * sign,
@@ -89,6 +93,25 @@ def _filter_label(backend: OdooBackend, model: str, record_id: int | None) -> st
     return records[0]["name"] if records else str(record_id)
 
 
+def _excluded_receipts(backend: OdooBackend, scope: list) -> list[Notice]:
+    """Purchase receipts share the numbering of the invoices, and their absence looks like a gap."""
+    receipts = backend.search_read_all(
+        "account.move",
+        [("move_type", "=", RECEIPT_TYPE), ("state", "=", "posted"), *scope],
+        ["amount_total_signed"],
+    )
+    if not receipts:
+        return []
+    total = sum((money(abs(r["amount_total_signed"])) for r in receipts), money(0))
+    return [
+        Notice(
+            NoticeCode.RECEIPTS_EXCLUDED,
+            "",
+            {"count": len(receipts), "total": format_amount(total)},
+        )
+    ]
+
+
 def extract_dossier(
     backend: OdooBackend,
     params: ExtractParams,
@@ -100,9 +123,10 @@ def extract_dossier(
     backend.default_context["allowed_company_ids"] = [company.id]
 
     progress(t("step.reading_invoices"))
-    domain = [*base_domain(), *year_domain(params.year), ("company_id", "=", company.id)]
+    scope = [*year_domain(params.year), ("company_id", "=", company.id)]
     if params.supplier_id is not None:
-        domain.append(("partner_id", "=", params.supplier_id))
+        scope.append(("partner_id", "=", params.supplier_id))
+    domain = [*base_domain(params.include_receipts), *scope]
     moves = backend.search_read_all("account.move", domain, MOVE_FIELDS)
 
     imputations = {}
@@ -121,18 +145,23 @@ def extract_dossier(
 
     partners = {
         p["id"]: p
-        for p in backend.read("res.partner", [m["partner_id"][0] for m in moves], ["name", "vat"])
+        for p in backend.read(
+            "res.partner", [m["partner_id"][0] for m in moves if m["partner_id"]], ["name", "vat"]
+        )
     }
 
     invoices: list[Invoice] = []
     for number, move in enumerate(moves, start=1):
-        invoice = _to_invoice(move, partners[move["partner_id"][0]])
+        partner = partners[move["partner_id"][0]] if move["partner_id"] else {}
+        invoice = _to_invoice(move, partner)
         invoice.order_number = number
         invoice.payments = payments[move["id"]]
         invoice.attachment = attachments[move["id"]]
         invoice.imputation = imputations.get(move["id"])
         invoices.append(invoice)
-        if not invoice.partner_vat:
+        if invoice.partner_id is None:
+            notices.append(Notice(NoticeCode.MISSING_SUPPLIER, invoice.name))
+        elif not invoice.partner_vat:
             notices.append(
                 Notice(NoticeCode.MISSING_VAT, invoice.name, {"supplier": invoice.partner_name})
             )
@@ -144,6 +173,9 @@ def extract_dossier(
                     NoticeCode.FOREIGN_CURRENCY, invoice.name, {"currency": move["currency_id"][1]}
                 )
             )
+
+    if not params.include_receipts and params.analytic_account_id is None:
+        notices.extend(_excluded_receipts(backend, scope))
 
     return Dossier(
         company=company,

@@ -11,6 +11,7 @@ from pathlib import Path
 from . import __version__
 from .config import AppConfig
 from .credentials import get_api_key
+from .excel_builder import build_workbook, excel_filename
 from .extract import (
     check_connection,
     extract_dossier,
@@ -22,6 +23,7 @@ from .formatting import format_amount
 from .i18n import t
 from .model import ExtractParams
 from .odoo_client import Json2Backend, OdooError, guess_database, normalize_base_url
+from .paths import new_output_folder
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -44,6 +46,14 @@ def _build_parser() -> argparse.ArgumentParser:
     extract.add_argument("--project", type=int, help="Id del compte analític")
     extract.add_argument("--supplier", type=int, help="Id del proveïdor")
     extract.add_argument("--json", type=Path, help="Desa les dades en un fitxer JSON")
+    extract.add_argument("--include-receipts", action="store_true", help=t("cli.help.receipts"))
+
+    excel = commands.add_parser("excel", help=t("cli.help.excel"))
+    excel.add_argument("--year", type=int, required=True)
+    excel.add_argument("--project", type=int, help="Id del compte analític")
+    excel.add_argument("--supplier", type=int, help="Id del proveïdor")
+    excel.add_argument("--out", type=Path, required=True, help=t("cli.help.out"))
+    excel.add_argument("--include-receipts", action="store_true", help=t("cli.help.receipts"))
     return parser
 
 
@@ -67,7 +77,7 @@ def _print_test(backend: Json2Backend) -> None:
 
 
 def _print_extract(backend: Json2Backend, args: argparse.Namespace, config: AppConfig) -> None:
-    params = ExtractParams(args.year, None, args.project, args.supplier)
+    params = ExtractParams(args.year, None, args.project, args.supplier, args.include_receipts)
     dossier = extract_dossier(backend, params, config.payment_form_overrides, progress=print)
     print(f"{t('cli.company')}: {dossier.company.name}")
     print(f"{t('cli.invoices')}: {len(dossier.invoices)}")
@@ -84,6 +94,14 @@ def _print_extract(backend: Json2Backend, args: argparse.Namespace, config: AppC
             encoding="utf-8",
         )
         print(f"{t('cli.saved')} {args.json}")
+
+
+def _print_excel(backend: Json2Backend, args: argparse.Namespace, config: AppConfig) -> None:
+    params = ExtractParams(args.year, None, args.project, args.supplier, args.include_receipts)
+    dossier = extract_dossier(backend, params, config.payment_form_overrides, progress=print)
+    path = new_output_folder(args.out, args.year) / excel_filename(args.year)
+    build_workbook(dossier, path)
+    print(f"{t('cli.saved')} {path}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -107,6 +125,8 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"{supplier['id']}\t{supplier['name']}")
         elif args.command == "extract":
             _print_extract(backend, args, config)
+        elif args.command == "excel":
+            _print_excel(backend, args, config)
     except OdooError as error:
         print(t(error.i18n_key), file=sys.stderr)
         if args.verbose and error.detail:

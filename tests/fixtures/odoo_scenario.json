@@ -653,6 +653,44 @@
    "message_main_attachment_id": false,
    "invoice_payments_widget": false,
    "matched_payment_ids": []
+  },
+  {
+   "id": 117,
+   "name": "FC/2099/06/0001",
+   "ref": "TIQUET-1",
+   "partner_id": false,
+   "invoice_date": "2099-06-20",
+   "amount_untaxed_signed": -15.0,
+   "amount_tax_signed": 0.0,
+   "amount_total_signed": -15.0,
+   "amount_total": 15.0,
+   "payment_state": "paid",
+   "move_type": "in_receipt",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    14,
+    "tiquet.pdf"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 15.0,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    11
+   ]
   }
  ],
  "account.move.line": [
@@ -1313,6 +1351,51 @@
    ],
    "payment_id": false,
    "statement_line_id": false
+  },
+  {
+   "id": 1170,
+   "move_id": [
+    117,
+    "FC/2099/06/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    99
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-06-20",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 6001,
+   "move_id": [
+    106001,
+    "ENT/6001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-06-20",
+   "journal_id": [
+    2,
+    "Caixa"
+   ],
+   "payment_id": [
+    11,
+    "PAG/11"
+   ],
+   "statement_line_id": false
   }
  ],
  "account.partial.reconcile": [
@@ -1487,6 +1570,19 @@
     "c"
    ],
    "exchange_move_id": false
+  },
+  {
+   "id": 99,
+   "amount": 15.0,
+   "debit_move_id": [
+    6001,
+    "d"
+   ],
+   "credit_move_id": [
+    1170,
+    "c"
+   ],
+   "exchange_move_id": false
   }
  ],
  "account.payment": [
@@ -1598,6 +1694,17 @@
    "payment_method_line_id": [
     10,
     "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 11,
+   "name": "PAG/11",
+   "date": "2099-06-20",
+   "amount": 15.0,
+   "state": "paid",
+   "payment_method_line_id": [
+    3,
+    "Manual (DIARI)"
    ]
   }
  ],
@@ -1765,6 +1872,16 @@
    "res_id": 112,
    "res_model": "account.move",
    "raw": "JVBERi0xLjQgag=="
+  },
+  {
+   "id": 14,
+   "name": "tiquet.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 16,
+   "checksum": "18153df3e6446a25eb475a94ac20a7e007ab5b92",
+   "res_id": 117,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgZXhlbXBsZQ=="
   }
  ],
  "account.analytic.account": [

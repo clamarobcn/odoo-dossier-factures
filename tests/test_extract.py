@@ -358,3 +358,27 @@ def test_pagination_reads_everything(backend, scenario):
     template = scenario["res.partner"][0]
     scenario["res.partner"] = [{**template, "id": n} for n in range(1, 451)]
     assert len(backend.search_read_all("res.partner", [], ["name"])) == 450
+
+
+def test_receipts_are_left_out_by_default_with_a_notice(dossier):
+    assert "FC/2099/06/0001" not in {i.name for i in dossier.invoices}
+    notice = next(n for n in dossier.notices if n.code is NoticeCode.RECEIPTS_EXCLUDED)
+    assert notice.params == {"count": 1, "total": "15,00"}
+
+
+def test_receipts_can_be_included_even_without_a_supplier(backend):
+    dossier = extract_dossier(backend, ExtractParams(YEAR, include_receipts=True))
+    receipt = by_name(dossier, "FC/2099/06/0001")
+    assert receipt.is_receipt
+    assert receipt.total == Decimal("15.00")
+    assert receipt.partner_id is None
+    assert receipt.partner_name == ""
+    assert [p.form for p in receipt.payments] == ["Efectiu"]
+    assert NoticeCode.MISSING_SUPPLIER in codes(dossier, receipt.name)
+    assert NoticeCode.RECEIPTS_EXCLUDED not in {n.code for n in dossier.notices}
+    assert len(dossier.invoices) == 13
+
+
+def test_excluded_receipts_follow_the_supplier_filter(backend):
+    dossier = extract_dossier(backend, ExtractParams(YEAR, supplier_id=2))
+    assert NoticeCode.RECEIPTS_EXCLUDED not in {n.code for n in dossier.notices}
