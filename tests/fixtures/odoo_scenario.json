@@ -1,0 +1,1880 @@
+{
+ "account.move": [
+  {
+   "id": 101,
+   "name": "FC/2099/01/0001",
+   "ref": "R-101",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-01-15",
+   "amount_untaxed_signed": -100,
+   "amount_tax_signed": -21,
+   "amount_total_signed": -121,
+   "amount_total": 121,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    1,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 121,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    1
+   ]
+  },
+  {
+   "id": 102,
+   "name": "FC/2099/01/0002",
+   "ref": "R-102",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-02-10",
+   "amount_untaxed_signed": -100,
+   "amount_tax_signed": -21,
+   "amount_total_signed": -121,
+   "amount_total": 121,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    2,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 50,
+      "is_exchange": false
+     },
+     {
+      "amount": 71,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    2,
+    3
+   ]
+  },
+  {
+   "id": 103,
+   "name": "FC/2099/02/0001",
+   "ref": "R-103",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-04-01",
+   "amount_untaxed_signed": -300,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -300,
+   "amount_total": 300,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 300,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    4
+   ]
+  },
+  {
+   "id": 104,
+   "name": "FC/2099/02/0002",
+   "ref": "R-104",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-04-02",
+   "amount_untaxed_signed": -700,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -700,
+   "amount_total": 700,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    6,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 700,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    4
+   ]
+  },
+  {
+   "id": 105,
+   "name": "FC/2099/03/0001",
+   "ref": "R-105",
+   "partner_id": [
+    2,
+    "Proveïdor Beta"
+   ],
+   "invoice_date": "2099-05-01",
+   "amount_untaxed_signed": -60.5,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -60.5,
+   "amount_total": 60.5,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 60.5,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": []
+  },
+  {
+   "id": 106,
+   "name": "RFC/2099/03/0001",
+   "ref": "R-106",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-05-10",
+   "amount_untaxed_signed": 40,
+   "amount_tax_signed": 0,
+   "amount_total_signed": 40,
+   "amount_total": 40,
+   "payment_state": "paid",
+   "move_type": "in_refund",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    7,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 40,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": []
+  },
+  {
+   "id": 107,
+   "name": "FC/2099/03/0002",
+   "ref": "R-107",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-05-11",
+   "amount_untaxed_signed": -100,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -100,
+   "amount_total": 100,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    8,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 40,
+      "is_exchange": false
+     },
+     {
+      "amount": 60,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    5
+   ]
+  },
+  {
+   "id": 108,
+   "name": "FC/2099/04/0001",
+   "ref": "R-108",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-06-01",
+   "amount_untaxed_signed": -80,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -80,
+   "amount_total": 80,
+   "payment_state": "not_paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    9,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": []
+   },
+   "matched_payment_ids": [
+    6,
+    7
+   ]
+  },
+  {
+   "id": 109,
+   "name": "FC/2099/04/0002",
+   "ref": "R-109",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-06-05",
+   "amount_untaxed_signed": -55,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -55,
+   "amount_total": 55,
+   "payment_state": "in_payment",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    10,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 55,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    8
+   ]
+  },
+  {
+   "id": 110,
+   "name": "FC/2099/05/0001",
+   "ref": "R-110",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-07-01",
+   "amount_untaxed_signed": -100,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -100,
+   "amount_total": 110,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    2,
+    "USD"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    11,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 95,
+      "is_exchange": false
+     },
+     {
+      "amount": 5,
+      "is_exchange": true
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    9
+   ]
+  },
+  {
+   "id": 111,
+   "name": "FC/2099/05/1000",
+   "ref": "R-111",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-08-01",
+   "amount_untaxed_signed": -30,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -30,
+   "amount_total": 30,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    12,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 33,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": [
+    10
+   ]
+  },
+  {
+   "id": 112,
+   "name": "FC/2099/05/999",
+   "ref": "",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-08-03",
+   "amount_untaxed_signed": -20,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -20,
+   "amount_total": 20,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": [
+    13,
+    "a"
+   ],
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": [
+     {
+      "amount": 20,
+      "is_exchange": false
+     }
+    ]
+   },
+   "matched_payment_ids": []
+  },
+  {
+   "id": 9000,
+   "name": "DIF/1",
+   "move_type": "entry",
+   "state": "posted",
+   "invoice_date": false,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "partner_id": false,
+   "ref": false,
+   "amount_untaxed_signed": 0,
+   "amount_tax_signed": 0,
+   "amount_total_signed": 0,
+   "amount_total": 0,
+   "payment_state": "not_paid",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": []
+  },
+  {
+   "id": 9100,
+   "name": "OPE/1",
+   "move_type": "entry",
+   "state": "posted",
+   "invoice_date": false,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "partner_id": false,
+   "ref": false,
+   "amount_untaxed_signed": 0,
+   "amount_tax_signed": 0,
+   "amount_total_signed": 0,
+   "amount_total": 0,
+   "payment_state": "not_paid",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": []
+  },
+  {
+   "id": 113,
+   "name": "/",
+   "ref": "R-113",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-09-01",
+   "amount_untaxed_signed": -10,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -10,
+   "amount_total": 10,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "draft",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": []
+  },
+  {
+   "id": 114,
+   "name": "FC/2098/12/0001",
+   "ref": "R-114",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2098-12-31",
+   "amount_untaxed_signed": -10,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -10,
+   "amount_total": 10,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": {
+    "title": "Pagos",
+    "content": []
+   },
+   "matched_payment_ids": []
+  },
+  {
+   "id": 115,
+   "name": "FV/2099/01/0001",
+   "ref": "R-115",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-09-02",
+   "amount_untaxed_signed": 10,
+   "amount_tax_signed": 0,
+   "amount_total_signed": 10,
+   "amount_total": 10,
+   "payment_state": "paid",
+   "move_type": "out_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": []
+  },
+  {
+   "id": 116,
+   "name": "FC/2099/09/0001",
+   "ref": "R-116",
+   "partner_id": [
+    1,
+    "Proveïdor Àlfa"
+   ],
+   "invoice_date": "2099-09-03",
+   "amount_untaxed_signed": -10,
+   "amount_tax_signed": 0,
+   "amount_total_signed": -10,
+   "amount_total": 10,
+   "payment_state": "paid",
+   "move_type": "in_invoice",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    2,
+    "Segona Entitat"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": []
+  }
+ ],
+ "account.move.line": [
+  {
+   "id": 1010,
+   "move_id": [
+    101,
+    "FC/2099/01/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    1
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-01-15",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5001,
+   "move_id": [
+    105001,
+    "ENT/5001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-01-20",
+   "journal_id": [
+    1,
+    "BANC EXEMPLE"
+   ],
+   "payment_id": [
+    1,
+    "PAG/1"
+   ],
+   "statement_line_id": false
+  },
+  {
+   "id": 1020,
+   "move_id": [
+    102,
+    "FC/2099/01/0002"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    2,
+    3
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-02-10",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5002,
+   "move_id": [
+    105002,
+    "ENT/5002"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-03-05",
+   "journal_id": [
+    1,
+    "BANC EXEMPLE"
+   ],
+   "payment_id": [
+    2,
+    "PAG/2"
+   ],
+   "statement_line_id": false
+  },
+  {
+   "id": 5003,
+   "move_id": [
+    105003,
+    "ENT/5003"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-02-20",
+   "journal_id": [
+    2,
+    "Caixa"
+   ],
+   "payment_id": [
+    3,
+    "PAG/3"
+   ],
+   "statement_line_id": false
+  },
+  {
+   "id": 1030,
+   "move_id": [
+    103,
+    "FC/2099/02/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    4
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-04-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1040,
+   "move_id": [
+    104,
+    "FC/2099/02/0002"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    5
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-04-02",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5004,
+   "move_id": [
+    105004,
+    "ENT/5004"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-04-10",
+   "journal_id": [
+    1,
+    "BANC EXEMPLE"
+   ],
+   "payment_id": [
+    4,
+    "PAG/4"
+   ],
+   "statement_line_id": false
+  },
+  {
+   "id": 1031,
+   "move_id": [
+    103,
+    "x"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": {
+    "7": 50.0
+   },
+   "price_total": 200,
+   "date": "2099-01-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1032,
+   "move_id": [
+    103,
+    "x"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": {
+    "8,7": 100.0
+   },
+   "price_total": 100,
+   "date": "2099-01-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1041,
+   "move_id": [
+    104,
+    "x"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": {
+    "8": 100.0
+   },
+   "price_total": 700,
+   "date": "2099-01-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1050,
+   "move_id": [
+    105,
+    "FC/2099/03/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    6
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-05-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5005,
+   "move_id": [
+    105005,
+    "ENT/5005"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-05-03",
+   "journal_id": [
+    1,
+    "BANC EXEMPLE"
+   ],
+   "payment_id": false,
+   "statement_line_id": [
+    1,
+    "st"
+   ]
+  },
+  {
+   "id": 1060,
+   "move_id": [
+    106,
+    "RFC/2099/03/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [
+    8
+   ],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-05-10",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1070,
+   "move_id": [
+    107,
+    "FC/2099/03/0002"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    7,
+    8
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-05-11",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5006,
+   "move_id": [
+    105006,
+    "ENT/5006"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-05-20",
+   "journal_id": [
+    3,
+    "TARGETA"
+   ],
+   "payment_id": [
+    5,
+    "PAG/5"
+   ],
+   "statement_line_id": false
+  },
+  {
+   "id": 1080,
+   "move_id": [
+    108,
+    "FC/2099/04/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-06-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1090,
+   "move_id": [
+    109,
+    "FC/2099/04/0002"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    9
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-06-05",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5007,
+   "move_id": [
+    105007,
+    "ENT/5007"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-06-06",
+   "journal_id": [
+    1,
+    "BANC EXEMPLE"
+   ],
+   "payment_id": [
+    8,
+    "PAG/8"
+   ],
+   "statement_line_id": false
+  },
+  {
+   "id": 1100,
+   "move_id": [
+    110,
+    "FC/2099/05/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    10,
+    11
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-07-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5008,
+   "move_id": [
+    105008,
+    "ENT/5008"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-07-02",
+   "journal_id": [
+    1,
+    "BANC EXEMPLE"
+   ],
+   "payment_id": [
+    9,
+    "PAG/9"
+   ],
+   "statement_line_id": false
+  },
+  {
+   "id": 5009,
+   "move_id": [
+    9000,
+    "DIF/1"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-07-31",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1110,
+   "move_id": [
+    111,
+    "FC/2099/05/1000"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    12
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-08-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5010,
+   "move_id": [
+    105010,
+    "ENT/5010"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-08-02",
+   "journal_id": [
+    1,
+    "BANC EXEMPLE"
+   ],
+   "payment_id": [
+    10,
+    "PAG/10"
+   ],
+   "statement_line_id": false
+  },
+  {
+   "id": 1120,
+   "move_id": [
+    112,
+    "FC/2099/05/999"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [
+    13
+   ],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-08-03",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 5011,
+   "move_id": [
+    9100,
+    "OPE/1"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-08-04",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1130,
+   "move_id": [
+    113,
+    "/"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-09-01",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1140,
+   "move_id": [
+    114,
+    "FC/2098/12/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2098-12-31",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1150,
+   "move_id": [
+    115,
+    "FV/2099/01/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-09-02",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  },
+  {
+   "id": 1160,
+   "move_id": [
+    116,
+    "FC/2099/09/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "payment_term",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-09-03",
+   "journal_id": [
+    4,
+    "Compres"
+   ],
+   "payment_id": false,
+   "statement_line_id": false
+  }
+ ],
+ "account.partial.reconcile": [
+  {
+   "id": 1,
+   "amount": 121,
+   "debit_move_id": [
+    5001,
+    "d"
+   ],
+   "credit_move_id": [
+    1010,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 2,
+   "amount": 50,
+   "debit_move_id": [
+    5002,
+    "d"
+   ],
+   "credit_move_id": [
+    1020,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 3,
+   "amount": 71,
+   "debit_move_id": [
+    5003,
+    "d"
+   ],
+   "credit_move_id": [
+    1020,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 4,
+   "amount": 300,
+   "debit_move_id": [
+    5004,
+    "d"
+   ],
+   "credit_move_id": [
+    1030,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 5,
+   "amount": 700,
+   "debit_move_id": [
+    5004,
+    "d"
+   ],
+   "credit_move_id": [
+    1040,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 6,
+   "amount": 60.5,
+   "debit_move_id": [
+    5005,
+    "d"
+   ],
+   "credit_move_id": [
+    1050,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 7,
+   "amount": 60,
+   "debit_move_id": [
+    5006,
+    "d"
+   ],
+   "credit_move_id": [
+    1070,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 8,
+   "amount": 40,
+   "debit_move_id": [
+    1060,
+    "d"
+   ],
+   "credit_move_id": [
+    1070,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 9,
+   "amount": 55,
+   "debit_move_id": [
+    5007,
+    "d"
+   ],
+   "credit_move_id": [
+    1090,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 10,
+   "amount": 95,
+   "debit_move_id": [
+    5008,
+    "d"
+   ],
+   "credit_move_id": [
+    1100,
+    "c"
+   ],
+   "exchange_move_id": [
+    9000,
+    "DIF/1"
+   ]
+  },
+  {
+   "id": 11,
+   "amount": 5,
+   "debit_move_id": [
+    5009,
+    "d"
+   ],
+   "credit_move_id": [
+    1100,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 12,
+   "amount": 30,
+   "debit_move_id": [
+    5010,
+    "d"
+   ],
+   "credit_move_id": [
+    1110,
+    "c"
+   ],
+   "exchange_move_id": false
+  },
+  {
+   "id": 13,
+   "amount": 20,
+   "debit_move_id": [
+    5011,
+    "d"
+   ],
+   "credit_move_id": [
+    1120,
+    "c"
+   ],
+   "exchange_move_id": false
+  }
+ ],
+ "account.payment": [
+  {
+   "id": 1,
+   "name": "PAG/1",
+   "date": "2099-01-20",
+   "amount": 121,
+   "state": "paid",
+   "payment_method_line_id": [
+    1,
+    "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 2,
+   "name": "PAG/2",
+   "date": "2099-03-05",
+   "amount": 50,
+   "state": "paid",
+   "payment_method_line_id": [
+    2,
+    "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 3,
+   "name": "PAG/3",
+   "date": "2099-02-20",
+   "amount": 71,
+   "state": "paid",
+   "payment_method_line_id": [
+    3,
+    "Manual (DIARI)"
+   ]
+  },
+  {
+   "id": 4,
+   "name": "PAG/4",
+   "date": "2099-04-10",
+   "amount": 1000,
+   "state": "paid",
+   "payment_method_line_id": [
+    4,
+    "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 5,
+   "name": "PAG/5",
+   "date": "2099-05-20",
+   "amount": 60,
+   "state": "paid",
+   "payment_method_line_id": [
+    5,
+    "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 6,
+   "name": "PAG/6",
+   "date": "2099-06-02",
+   "amount": 80,
+   "state": "canceled",
+   "payment_method_line_id": [
+    6,
+    "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 7,
+   "name": "PAG/7",
+   "date": "2099-06-03",
+   "amount": 80,
+   "state": "paid",
+   "payment_method_line_id": [
+    7,
+    "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 8,
+   "name": "PAG/8",
+   "date": "2099-06-06",
+   "amount": 55,
+   "state": "paid",
+   "payment_method_line_id": [
+    8,
+    "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 9,
+   "name": "PAG/9",
+   "date": "2099-07-02",
+   "amount": 110,
+   "state": "paid",
+   "payment_method_line_id": [
+    9,
+    "Transferència (DIARI)"
+   ]
+  },
+  {
+   "id": 10,
+   "name": "PAG/10",
+   "date": "2099-08-02",
+   "amount": 30,
+   "state": "paid",
+   "payment_method_line_id": [
+    10,
+    "Transferència (DIARI)"
+   ]
+  }
+ ],
+ "account.bank.statement.line": [
+  {
+   "id": 1,
+   "date": "2099-05-03",
+   "payment_ref": "REBUT 123"
+  }
+ ],
+ "account.journal": [
+  {
+   "id": 1,
+   "name": "BANC EXEMPLE",
+   "type": "bank"
+  },
+  {
+   "id": 2,
+   "name": "Caixa",
+   "type": "cash"
+  },
+  {
+   "id": 3,
+   "name": "TARGETA",
+   "type": "credit"
+  },
+  {
+   "id": 4,
+   "name": "Compres",
+   "type": "purchase"
+  },
+  {
+   "id": 5,
+   "name": "Operacions",
+   "type": "general"
+  }
+ ],
+ "ir.attachment": [
+  {
+   "id": 1,
+   "name": "factura.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 16,
+   "checksum": "18153df3e6446a25eb475a94ac20a7e007ab5b92",
+   "res_id": 101,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgZXhlbXBsZQ=="
+  },
+  {
+   "id": 2,
+   "name": "foto.jpg",
+   "mimetype": "image/jpeg",
+   "file_size": 11,
+   "checksum": "3138cbf241b875fedd2008c90f88f89a9d133a73",
+   "res_id": 102,
+   "res_model": "account.move",
+   "raw": "/9j/IGV4ZW1wbGU="
+  },
+  {
+   "id": 3,
+   "name": "fe.xml",
+   "mimetype": "application/xml",
+   "file_size": 4,
+   "checksum": "2401adb2cffefdbfcd7f63f17b91a5d946e7855c",
+   "res_id": 103,
+   "res_model": "account.move",
+   "raw": "PHgvPg=="
+  },
+  {
+   "id": 4,
+   "name": "primer.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "9393c29f7be212e24a1b74c695cf74bcd5c52d1a",
+   "res_id": 103,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgYQ=="
+  },
+  {
+   "id": 5,
+   "name": "segon.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "97ee75aaf3c2561a3b1f85f60f63ae323c205c09",
+   "res_id": 103,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgYg=="
+  },
+  {
+   "id": 6,
+   "name": "f.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "76c6f9f76957a8db06ba6182ed9aef87f2000528",
+   "res_id": 104,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgYw=="
+  },
+  {
+   "id": 7,
+   "name": "abono.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "2116d8ce4285209374b8a8a42b403e0203a0bfe2",
+   "res_id": 106,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgZA=="
+  },
+  {
+   "id": 8,
+   "name": "f.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "67cbafc4db6bb1a1c4680cd3e29fbf0ab5575c09",
+   "res_id": 107,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgZQ=="
+  },
+  {
+   "id": 9,
+   "name": "f.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "e2a2cf4bd844b2d08e082f9c3d2922ab5d510304",
+   "res_id": 108,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgZg=="
+  },
+  {
+   "id": 10,
+   "name": "f.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "772932591cfdd51d3386707daf3b6d8bccdb18e2",
+   "res_id": 109,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgZw=="
+  },
+  {
+   "id": 11,
+   "name": "f.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "96b47ab7f891c6a7196e024c5db71b26d419ee3b",
+   "res_id": 110,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgaA=="
+  },
+  {
+   "id": 12,
+   "name": "f.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "b04e433d32b8d316e9bc8d8752ce4a35c5d94714",
+   "res_id": 111,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgaQ=="
+  },
+  {
+   "id": 13,
+   "name": "f.pdf",
+   "mimetype": "application/pdf",
+   "file_size": 10,
+   "checksum": "3406d85cf02f4a10b248afba7bc729f50cceb06a",
+   "res_id": 112,
+   "res_model": "account.move",
+   "raw": "JVBERi0xLjQgag=="
+  }
+ ],
+ "account.analytic.account": [
+  {
+   "id": 7,
+   "name": "Projecte Set",
+   "code": "P7",
+   "plan_id": [
+    1,
+    "Pla"
+   ]
+  },
+  {
+   "id": 8,
+   "name": "Projecte Vuit",
+   "code": false,
+   "plan_id": [
+    1,
+    "Pla"
+   ]
+  }
+ ],
+ "res.partner": [
+  {
+   "id": 1,
+   "name": "Proveïdor Àlfa",
+   "vat": "B00000001"
+  },
+  {
+   "id": 2,
+   "name": "Proveïdor Beta",
+   "vat": false
+  },
+  {
+   "id": 3,
+   "name": "Tercer",
+   "vat": "B00000003"
+  }
+ ],
+ "res.company": [
+  {
+   "id": 1,
+   "name": "Entitat d'Exemple",
+   "vat": "G00000000",
+   "currency_id": [
+    1,
+    "EUR"
+   ]
+  },
+  {
+   "id": 2,
+   "name": "Segona Entitat",
+   "vat": "G11111111",
+   "currency_id": [
+    1,
+    "EUR"
+   ]
+  }
+ ],
+ "res.users": [
+  {
+   "id": 5,
+   "name": "Usuària Prova",
+   "login": "prova@example.invalid",
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  }
+ ],
+ "account.payment.method.line": [
+  {
+   "id": 1,
+   "name": "Transferència"
+  },
+  {
+   "id": 2,
+   "name": "Transferència"
+  },
+  {
+   "id": 3,
+   "name": "Manual"
+  },
+  {
+   "id": 4,
+   "name": "Transferència"
+  },
+  {
+   "id": 5,
+   "name": "Transferència"
+  },
+  {
+   "id": 6,
+   "name": "Transferència"
+  },
+  {
+   "id": 7,
+   "name": "Transferència"
+  },
+  {
+   "id": 8,
+   "name": "Transferència"
+  },
+  {
+   "id": 9,
+   "name": "Transferència"
+  },
+  {
+   "id": 10,
+   "name": "Transferència"
+  }
+ ]
+}

@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dossier-factures"
+description = "Genera el registre i el dossier anual de factures de proveïdor des d'Odoo (només lectura)."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Claudi Martí Rovira" }]
+dynamic = ["version"]
+dependencies = [
+    "keyring>=25,<26",
+    "openpyxl>=3.1,<4",
+    # 10.13 is the last release with an Intel macOS wheel; Windows builds resolve to newer 10.x.
+    "pikepdf>=10.13,<11",
+    "pillow>=11,<14",
+    "reportlab>=4.2,<6",
+    "requests>=2.32,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+dossier-factures = "dossier_factures.cli:main"
+
+[project.urls]
+Repository = "https://github.com/clamarobcn/odoo-dossier-factures"
+
+[tool.hatch.version]
+path = "src/dossier_factures/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dossier_factures"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
