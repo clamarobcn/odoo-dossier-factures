@@ -27,6 +27,9 @@ dev = ["pypdfium2>=4.30", "pytest>=8", "ruff>=0.6"]
 [project.scripts]
 dossier-factures = "dossier_factures.cli:main"
 
+[project.gui-scripts]
+dossier-factures-gui = "dossier_factures.gui:main"
+
 [project.urls]
 Repository = "https://github.com/clamarobcn/odoo-dossier-factures"
 

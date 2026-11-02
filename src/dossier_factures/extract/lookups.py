@@ -6,7 +6,7 @@ from datetime import date
 from typing import Any
 
 from ..model import Company
-from ..odoo_client import MissingFieldsError, OdooBackend
+from ..odoo_client import AccessOrPlanError, MissingFieldsError, OdooBackend
 from .attachments import ATTACHMENT_FIELDS, detect_content_field
 from .invoices import MOVE_FIELDS, base_domain, list_companies, year_domain
 
@@ -41,6 +41,9 @@ REQUIRED_FIELDS = {
 }
 
 
+OPTIONAL_MODELS = {"account.analytic.account"}
+
+
 @dataclass(frozen=True)
 class ConnectionInfo:
     version: str
@@ -55,7 +58,13 @@ def check_required_fields(backend: OdooBackend) -> None:
     """Fail early and clearly when an Odoo upgrade has changed what the application reads."""
     missing: dict[str, list[str]] = {}
     for model, fields in REQUIRED_FIELDS.items():
-        available = backend.fields_get(model)
+        try:
+            available = backend.fields_get(model)
+        except AccessOrPlanError:
+            # Filtering by project is optional: the rest works without analytic accounting.
+            if model in OPTIONAL_MODELS:
+                continue
+            raise
         absent = [f for f in fields if f not in available]
         if absent:
             missing[model] = absent
@@ -79,25 +88,38 @@ def check_connection(backend: OdooBackend) -> ConnectionInfo:
 
 
 def list_years(backend: OdooBackend) -> list[int]:
-    """From the current year back to the oldest invoice, most recent first."""
+    """Every year from the newest to the oldest invoice, always including the current one."""
     current = date.today().year
     oldest = backend.search_read(
         "account.move", base_domain(), ["invoice_date"], order="invoice_date asc", limit=1
     )
     first = int(oldest[0]["invoice_date"][:4]) if oldest else current
-    return list(range(max(first, current), min(first, current) - 1, -1))
+    last = latest_invoice_year(backend) or current
+    return list(range(max(last, current), min(first, current) - 1, -1))
+
+
+def latest_invoice_year(backend: OdooBackend) -> int | None:
+    """The year of the newest document, which is the one usually justified."""
+    newest = backend.search_read(
+        "account.move", base_domain(), ["invoice_date"], order="invoice_date desc", limit=1
+    )
+    return int(newest[0]["invoice_date"][:4]) if newest else None
 
 
 def list_analytic_accounts(backend: OdooBackend) -> list[dict[str, Any]]:
+    try:
+        accounts = backend.search_read_all(
+            "account.analytic.account", [], ["name", "code", "plan_id"], order="name asc, id asc"
+        )
+    except AccessOrPlanError:
+        return []
     return [
         {
             "id": a["id"],
             "name": f"[{a['code']}] {a['name']}" if a["code"] else a["name"],
             "plan": a["plan_id"][1] if a["plan_id"] else "",
         }
-        for a in backend.search_read_all(
-            "account.analytic.account", [], ["name", "code", "plan_id"], order="name asc, id asc"
-        )
+        for a in accounts
     ]
 
 

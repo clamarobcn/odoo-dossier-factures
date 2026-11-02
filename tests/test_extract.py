@@ -495,3 +495,9 @@ def test_other_expenses_follow_the_project_filter(backend):
     assert fee.imputation.percent == Decimal("100.00")
     assert fee.imputation.amount == Decimal("12.00")
     assert "NOM/2099/01/0001" not in {i.name for i in dossier.invoices}
+
+
+def test_list_years_includes_a_year_after_the_current_one(backend):
+    years = list_years(backend)
+    assert years[0] == 2099
+    assert date.today().year in years

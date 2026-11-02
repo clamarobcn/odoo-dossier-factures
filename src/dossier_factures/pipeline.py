@@ -28,6 +28,10 @@ from .pdf_builder import (
 Progress = Callable[[str, int | None, int | None], None]
 
 
+class NothingToGenerate(Exception):
+    """No invoice matches the chosen year and filters."""
+
+
 def _silent(_message: str, _current: int | None = None, _total: int | None = None) -> None:
     pass
 
@@ -138,6 +142,8 @@ def generate(
     dossier = extract_dossier(
         backend, params, options.form_overrides, progress=lambda m: progress(m, None, None)
     )
+    if not dossier.invoices:
+        raise NothingToGenerate
     notices = list(dossier.notices)
     content_field = detect_content_field(backend)
 

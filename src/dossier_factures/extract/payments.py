@@ -16,6 +16,7 @@ from datetime import date
 from decimal import Decimal
 from typing import Any
 
+from ..formatting import format_amount, format_date
 from ..i18n import t
 from ..model import Notice, NoticeCode, Payment, PaymentKind, money
 from ..odoo_client import OdooBackend, chunks
@@ -112,7 +113,7 @@ def _cross_check(move: dict[str, Any], applied: list[_Applied]) -> Notice | None
     return Notice(
         NoticeCode.PAYMENT_MISMATCH,
         move["name"],
-        {"lines": str(from_lines), "widget": str(from_widget)},
+        {"lines": format_amount(from_lines), "widget": format_amount(from_widget)},
     )
 
 
@@ -131,8 +132,8 @@ def _unreconciled(
                 move["name"],
                 {
                     "payment": payment["name"],
-                    "date": payment["date"],
-                    "amount": str(money(payment["amount"])),
+                    "date": format_date(date.fromisoformat(payment["date"])),
+                    "amount": format_amount(money(payment["amount"])),
                 },
             )
         )

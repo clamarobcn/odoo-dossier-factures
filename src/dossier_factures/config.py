@@ -22,6 +22,9 @@ class AppConfig:
     target_dpi: int = 150
     jpeg_quality: int = 70
     split_threshold_mb: int = 100
+    include_receipts: bool = True
+    include_other_expenses: bool = True
+    show_personnel_names: bool = False
     # Journal name -> label of the payment form, when the journal type is not enough.
     payment_form_overrides: dict[str, str] = field(default_factory=dict)
 

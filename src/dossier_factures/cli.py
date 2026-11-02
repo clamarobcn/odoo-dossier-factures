@@ -25,7 +25,9 @@ from .i18n import t
 from .model import ExtractParams
 from .odoo_client import Json2Backend, OdooError, guess_database, normalize_base_url
 from .paths import new_output_folder
-from .pipeline import GenerateOptions, generate
+from .pdf_builder import Cancelled
+from .pipeline import GenerateOptions, NothingToGenerate, generate
+from .summary import describe_error, summary_lines
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -155,14 +157,7 @@ def _print_generate(backend: Json2Backend, args: argparse.Namespace, config: App
             last["message"] = message
 
     result = generate(backend, params, options, progress)
-    print(f"{t('cli.invoices')}: {len(result.dossier.invoices)}")
-    print(f"{t('cli.total')}: {format_amount(result.dossier.total)} €")
-    print(f"{t('cli.pages')}: {result.page_count}")
-    for volume in result.volumes:
-        size = volume.path.stat().st_size / 1024 / 1024
-        print(f"  {volume.path.name}: {volume.page_count} pàg., {size:.1f} MB")
-    for code, count in Counter(n.code for n in result.notices).items():
-        print(f"  {count} x {code}")
+    print("\n".join(summary_lines(result)))
     if result.oversize:
         print(t("cli.oversize", limit=config.split_threshold_mb))
     print(f"{t('cli.saved')} {result.folder}")
@@ -193,9 +188,9 @@ def main(argv: list[str] | None = None) -> int:
             _print_excel(backend, args, config)
         elif args.command == "generate":
             _print_generate(backend, args, config)
-    except OdooError as error:
-        print(t(error.i18n_key), file=sys.stderr)
-        if args.verbose and error.detail:
+    except (OdooError, Cancelled, NothingToGenerate, OSError) as error:
+        print(describe_error(error), file=sys.stderr)
+        if args.verbose and getattr(error, "detail", ""):
             print(error.detail, file=sys.stderr)
         return 2
     return 0
