@@ -25,7 +25,7 @@ YEAR = 2099
 
 @pytest.fixture
 def dossier(backend):
-    return extract_dossier(backend, ExtractParams(YEAR))
+    return extract_dossier(backend, ExtractParams(YEAR, include_other_expenses=False))
 
 
 def by_name(dossier, name):
@@ -185,7 +185,8 @@ def test_quarter_comes_from_the_invoice_date(dossier):
 
 
 def test_form_overrides_win_over_journal_type(backend):
-    dossier = extract_dossier(backend, ExtractParams(YEAR), {"BANC EXEMPLE": "Transferència"})
+    params = ExtractParams(YEAR, include_other_expenses=False)
+    dossier = extract_dossier(backend, params, {"BANC EXEMPLE": "Transferència"})
     assert by_name(dossier, "FC/2099/01/0001").payments[0].form == "Transferència"
 
 
@@ -216,7 +217,7 @@ def test_missing_attachment_warns(dossier):
 def test_main_attachment_of_unusable_type_falls_back(backend, scenario):
     move = next(m for m in scenario["account.move"] if m["id"] == 103)
     move["message_main_attachment_id"] = [3, "fe.xml"]
-    dossier = extract_dossier(backend, ExtractParams(YEAR))
+    dossier = extract_dossier(backend, ExtractParams(YEAR, include_other_expenses=False))
     assert by_name(dossier, "FC/2099/02/0001").attachment.name == "primer.pdf"
 
 
@@ -228,7 +229,8 @@ def test_supplier_filter(backend):
 
 
 def test_analytic_filter_computes_share_with_vat(backend):
-    dossier = extract_dossier(backend, ExtractParams(YEAR, analytic_account_id=7))
+    params = ExtractParams(YEAR, analytic_account_id=7, include_other_expenses=False)
+    dossier = extract_dossier(backend, params)
     assert [i.name for i in dossier.invoices] == ["FC/2099/02/0001"]
     assert dossier.analytic_account_name == "Projecte Set"
     imputation = dossier.invoices[0].imputation
@@ -267,7 +269,8 @@ def test_company_is_the_users_one_when_there_are_several(dossier):
 
 
 def test_explicit_company(backend, scenario):
-    dossier = extract_dossier(backend, ExtractParams(YEAR, company_id=2))
+    params = ExtractParams(YEAR, company_id=2, include_other_expenses=False)
+    dossier = extract_dossier(backend, params)
     assert [i.name for i in dossier.invoices] == ["FC/2099/09/0001"]
     assert backend.default_context["allowed_company_ids"] == [2]
 
@@ -372,7 +375,9 @@ def test_pagination_reads_everything(backend, scenario):
 
 
 def test_receipts_can_be_left_out_with_a_notice(backend):
-    dossier = extract_dossier(backend, ExtractParams(YEAR, include_receipts=False))
+    dossier = extract_dossier(
+        backend, ExtractParams(YEAR, include_receipts=False, include_other_expenses=False)
+    )
     assert "FC/2099/06/0001" not in {i.name for i in dossier.invoices}
     notice = next(n for n in dossier.notices if n.code is NoticeCode.RECEIPTS_EXCLUDED)
     assert notice.params == {"count": 1, "total": "15,00"}
@@ -394,3 +399,99 @@ def test_excluded_receipts_follow_the_supplier_filter(backend):
     params = ExtractParams(YEAR, supplier_id=2, include_receipts=False)
     dossier = extract_dossier(backend, params)
     assert NoticeCode.RECEIPTS_EXCLUDED not in {n.code for n in dossier.notices}
+
+
+@pytest.fixture
+def full(backend):
+    return extract_dossier(backend, ExtractParams(YEAR))
+
+
+def test_other_expenses_come_after_the_invoices_with_consecutive_numbers(full):
+    names = [i.name for i in full.invoices]
+    assert names[13:] == [
+        "NOM/2099/01/0001",
+        "VAR/2099/01/0001",
+        "VAR/2099/02/0001",
+        "VAR/2099/02/0002",
+    ]
+    assert [i.order_number for i in full.invoices] == list(range(1, 18))
+
+
+def test_other_expenses_use_the_expense_lines_and_the_entry_date(full):
+    payroll = by_name(full, "NOM/2099/01/0001")
+    assert payroll.is_other_expense
+    assert payroll.total == payroll.untaxed == Decimal("650.00")
+    assert payroll.tax == Decimal("0.00")
+    assert payroll.invoice_date == date(2099, 1, 31)
+    assert payroll.payment_state == ""
+
+
+def test_other_years_stay_out(full):
+    assert "VAR/2098/01/0001" not in {i.name for i in full.invoices}
+
+
+def test_liquidity_line_is_the_payment_and_refunds_are_negative(full):
+    fee = by_name(full, "VAR/2099/02/0001").payments
+    assert [(p.date, p.form, p.amount) for p in fee] == [
+        (date(2099, 2, 2), "Banc Exemple", Decimal("12.00"))
+    ]
+    refund = by_name(full, "VAR/2099/02/0002")
+    assert refund.total == Decimal("-30.00")
+    assert refund.payments[0].amount == Decimal("-30.00")
+
+
+def test_entry_without_money_movement_has_no_payment_and_no_notice(full):
+    assert by_name(full, "NOM/2099/01/0001").payments == []
+    assert NoticeCode.NO_PAYMENT not in codes(full, "NOM/2099/01/0001")
+
+
+def test_personnel_concept_hides_names_unless_asked(backend, full):
+    assert by_name(full, "NOM/2099/01/0001").partner_name == "Despesa de personal"
+    assert by_name(full, "VAR/2099/02/0001").partner_name == "Comissió de manteniment"
+    shown = extract_dossier(backend, ExtractParams(YEAR, show_personnel_names=True))
+    assert by_name(shown, "NOM/2099/01/0001").partner_name == "NÒMINA GENER PERSONA EXEMPLE"
+
+
+def test_undocumented_expenses_are_summarized_not_listed(full):
+    assert NoticeCode.MISSING_ATTACHMENT not in codes(full, "NOM/2099/01/0001")
+    notice = next(n for n in full.notices if n.code is NoticeCode.OTHER_EXPENSES)
+    assert notice.params == {"count": 4, "total": "1.282,00"}
+
+
+def test_possible_duplicates_are_reported(full):
+    notice = next(n for n in full.notices if n.code is NoticeCode.POSSIBLE_DUPLICATE)
+    assert notice.params["names"] == "NOM/2099/01/0001, VAR/2099/01/0001"
+    assert notice.params["month"] == "01/2099"
+
+
+def test_documented_separates_what_goes_in_the_pdf(full):
+    assert {i.name for i in full.undocumented_expenses} == {
+        "NOM/2099/01/0001",
+        "VAR/2099/01/0001",
+        "VAR/2099/02/0001",
+        "VAR/2099/02/0002",
+    }
+    assert len(full.documented) == 13
+    assert full.total == sum(i.total for i in full.invoices)
+
+
+def test_entry_with_a_document_does_go_in_the_pdf(backend, scenario):
+    move = next(m for m in scenario["account.move"] if m["id"] == 203)
+    move["message_main_attachment_id"] = [1, "factura.pdf"]
+    dossier = extract_dossier(backend, ExtractParams(YEAR))
+    assert "VAR/2099/02/0001" in {i.name for i in dossier.documented}
+
+
+def test_other_expenses_can_be_left_out_and_skip_supplier_filter(backend):
+    without = extract_dossier(backend, ExtractParams(YEAR, include_other_expenses=False))
+    assert not [i for i in without.invoices if i.is_other_expense]
+    filtered = extract_dossier(backend, ExtractParams(YEAR, supplier_id=2))
+    assert not [i for i in filtered.invoices if i.is_other_expense]
+
+
+def test_other_expenses_follow_the_project_filter(backend):
+    dossier = extract_dossier(backend, ExtractParams(YEAR, analytic_account_id=7))
+    fee = by_name(dossier, "VAR/2099/02/0001")
+    assert fee.imputation.percent == Decimal("100.00")
+    assert fee.imputation.amount == Decimal("12.00")
+    assert "NOM/2099/01/0001" not in {i.name for i in dossier.invoices}

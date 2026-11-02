@@ -39,7 +39,8 @@
    },
    "matched_payment_ids": [
     1
-   ]
+   ],
+   "date": "2099-01-15"
   },
   {
    "id": 102,
@@ -85,7 +86,8 @@
    "matched_payment_ids": [
     2,
     3
-   ]
+   ],
+   "date": "2099-02-10"
   },
   {
    "id": 103,
@@ -123,7 +125,8 @@
    },
    "matched_payment_ids": [
     4
-   ]
+   ],
+   "date": "2099-04-01"
   },
   {
    "id": 104,
@@ -164,7 +167,8 @@
    },
    "matched_payment_ids": [
     4
-   ]
+   ],
+   "date": "2099-04-02"
   },
   {
    "id": 105,
@@ -200,7 +204,8 @@
      }
     ]
    },
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2099-05-01"
   },
   {
    "id": 106,
@@ -239,7 +244,8 @@
      }
     ]
    },
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2099-05-10"
   },
   {
    "id": 107,
@@ -284,7 +290,8 @@
    },
    "matched_payment_ids": [
     5
-   ]
+   ],
+   "date": "2099-05-11"
   },
   {
    "id": 108,
@@ -321,7 +328,8 @@
    "matched_payment_ids": [
     6,
     7
-   ]
+   ],
+   "date": "2099-06-01"
   },
   {
    "id": 109,
@@ -362,7 +370,8 @@
    },
    "matched_payment_ids": [
     8
-   ]
+   ],
+   "date": "2099-06-05"
   },
   {
    "id": 110,
@@ -407,7 +416,8 @@
    },
    "matched_payment_ids": [
     9
-   ]
+   ],
+   "date": "2099-07-01"
   },
   {
    "id": 111,
@@ -448,7 +458,8 @@
    },
    "matched_payment_ids": [
     10
-   ]
+   ],
+   "date": "2099-08-01"
   },
   {
    "id": 112,
@@ -487,7 +498,8 @@
      }
     ]
    },
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2099-08-03"
   },
   {
    "id": 9000,
@@ -512,7 +524,8 @@
    ],
    "message_main_attachment_id": false,
    "invoice_payments_widget": false,
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2099-01-01"
   },
   {
    "id": 9100,
@@ -537,7 +550,8 @@
    ],
    "message_main_attachment_id": false,
    "invoice_payments_widget": false,
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2099-01-01"
   },
   {
    "id": 113,
@@ -565,7 +579,8 @@
    ],
    "message_main_attachment_id": false,
    "invoice_payments_widget": false,
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2099-09-01"
   },
   {
    "id": 114,
@@ -596,7 +611,8 @@
     "title": "Pagos",
     "content": []
    },
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2098-12-31"
   },
   {
    "id": 115,
@@ -624,7 +640,8 @@
    ],
    "message_main_attachment_id": false,
    "invoice_payments_widget": false,
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2099-09-02"
   },
   {
    "id": 116,
@@ -652,7 +669,8 @@
    ],
    "message_main_attachment_id": false,
    "invoice_payments_widget": false,
-   "matched_payment_ids": []
+   "matched_payment_ids": [],
+   "date": "2099-09-03"
   },
   {
    "id": 117,
@@ -690,7 +708,138 @@
    },
    "matched_payment_ids": [
     11
-   ]
+   ],
+   "date": "2099-06-20"
+  },
+  {
+   "id": 201,
+   "name": "NOM/2099/01/0001",
+   "ref": "NÒMINA GENER PERSONA EXEMPLE",
+   "partner_id": false,
+   "invoice_date": false,
+   "amount_untaxed_signed": 0,
+   "amount_tax_signed": 0,
+   "amount_total_signed": 0,
+   "amount_total": 0,
+   "payment_state": "not_paid",
+   "move_type": "entry",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": [],
+   "date": "2099-01-31"
+  },
+  {
+   "id": 202,
+   "name": "VAR/2099/01/0001",
+   "ref": "NÒMINA GENER BIS",
+   "partner_id": false,
+   "invoice_date": false,
+   "amount_untaxed_signed": 0,
+   "amount_tax_signed": 0,
+   "amount_total_signed": 0,
+   "amount_total": 0,
+   "payment_state": "not_paid",
+   "move_type": "entry",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": [],
+   "date": "2099-01-31"
+  },
+  {
+   "id": 203,
+   "name": "VAR/2099/02/0001",
+   "ref": "Comissió de manteniment",
+   "partner_id": false,
+   "invoice_date": false,
+   "amount_untaxed_signed": 0,
+   "amount_tax_signed": 0,
+   "amount_total_signed": 0,
+   "amount_total": 0,
+   "payment_state": "not_paid",
+   "move_type": "entry",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": [],
+   "date": "2099-02-02"
+  },
+  {
+   "id": 204,
+   "name": "VAR/2099/02/0002",
+   "ref": "Bonificació formació",
+   "partner_id": false,
+   "invoice_date": false,
+   "amount_untaxed_signed": 0,
+   "amount_tax_signed": 0,
+   "amount_total_signed": 0,
+   "amount_total": 0,
+   "payment_state": "not_paid",
+   "move_type": "entry",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": [],
+   "date": "2099-02-20"
+  },
+  {
+   "id": 205,
+   "name": "VAR/2098/01/0001",
+   "ref": "Altre any",
+   "partner_id": false,
+   "invoice_date": false,
+   "amount_untaxed_signed": -100,
+   "amount_tax_signed": -21,
+   "amount_total_signed": -121,
+   "amount_total": 121,
+   "payment_state": "paid",
+   "move_type": "entry",
+   "state": "posted",
+   "currency_id": [
+    1,
+    "EUR"
+   ],
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ],
+   "message_main_attachment_id": false,
+   "invoice_payments_widget": false,
+   "matched_payment_ids": [],
+   "date": "2098-02-20"
   }
  ],
  "account.move.line": [
@@ -714,7 +863,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5001,
@@ -737,7 +897,18 @@
     1,
     "PAG/1"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1020,
@@ -760,7 +931,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5002,
@@ -783,7 +965,18 @@
     2,
     "PAG/2"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5003,
@@ -806,7 +999,18 @@
     3,
     "PAG/3"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1030,
@@ -828,7 +1032,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1040,
@@ -850,7 +1065,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5004,
@@ -873,7 +1099,18 @@
     4,
     "PAG/4"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1031,
@@ -895,7 +1132,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1032,
@@ -917,7 +1165,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1041,
@@ -939,7 +1198,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1050,
@@ -961,7 +1231,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5005,
@@ -984,6 +1265,17 @@
    "statement_line_id": [
     1,
     "st"
+   ],
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
    ]
   },
   {
@@ -1006,7 +1298,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_refund",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1070,
@@ -1029,7 +1332,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5006,
@@ -1052,7 +1366,18 @@
     5,
     "PAG/5"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1080,
@@ -1072,7 +1397,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1090,
@@ -1094,7 +1430,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5007,
@@ -1117,7 +1464,18 @@
     8,
     "PAG/8"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1100,
@@ -1140,7 +1498,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5008,
@@ -1163,7 +1532,18 @@
     9,
     "PAG/9"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5009,
@@ -1183,7 +1563,18 @@
     "Operacions"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1110,
@@ -1205,7 +1596,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5010,
@@ -1228,7 +1630,18 @@
     10,
     "PAG/10"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1120,
@@ -1250,7 +1663,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 5011,
@@ -1270,7 +1694,18 @@
     "Operacions"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1130,
@@ -1290,7 +1725,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1140,
@@ -1310,7 +1756,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1150,
@@ -1330,7 +1787,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "out_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1160,
@@ -1350,7 +1818,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_invoice",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 1170,
@@ -1372,7 +1851,18 @@
     "Compres"
    ],
    "payment_id": false,
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "in_receipt",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   },
   {
    "id": 6001,
@@ -1395,7 +1885,361 @@
     11,
     "PAG/11"
    ],
-   "statement_line_id": false
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    100,
+    "400000 Proveïdors"
+   ],
+   "balance": 0.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20100,
+   "move_id": [
+    201,
+    "NOM/2099/01/0001"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-01-31",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    640,
+    "640001 Sous de Persona Exemple"
+   ],
+   "balance": 500.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20101,
+   "move_id": [
+    201,
+    "NOM/2099/01/0001"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-01-31",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    642,
+    "642001 Seguretat Social"
+   ],
+   "balance": 150.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20102,
+   "move_id": [
+    201,
+    "NOM/2099/01/0001"
+   ],
+   "account_type": "liability_payable",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-01-31",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    465,
+    "465000 Remuneracions pendents"
+   ],
+   "balance": -650.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20200,
+   "move_id": [
+    202,
+    "VAR/2099/01/0001"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-01-31",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    640,
+    "640001 Sous de Persona Exemple"
+   ],
+   "balance": 500.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20201,
+   "move_id": [
+    202,
+    "VAR/2099/01/0001"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-01-31",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    642,
+    "642001 Seguretat Social"
+   ],
+   "balance": 150.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20202,
+   "move_id": [
+    202,
+    "VAR/2099/01/0001"
+   ],
+   "account_type": "liability_current",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-01-31",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    465,
+    "465000 Remuneracions pendents"
+   ],
+   "balance": -650.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20300,
+   "move_id": [
+    203,
+    "VAR/2099/02/0001"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": {
+    "7": 100.0
+   },
+   "price_total": 0,
+   "date": "2099-02-02",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    626,
+    "626000 Serveis bancaris"
+   ],
+   "balance": 12.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20301,
+   "move_id": [
+    203,
+    "VAR/2099/02/0001"
+   ],
+   "account_type": "asset_cash",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-02-02",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    572,
+    "572001 Banc Exemple"
+   ],
+   "balance": -12.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20400,
+   "move_id": [
+    204,
+    "VAR/2099/02/0002"
+   ],
+   "account_type": "asset_cash",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-02-20",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    572,
+    "572001 Banc Exemple"
+   ],
+   "balance": 30.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20401,
+   "move_id": [
+    204,
+    "VAR/2099/02/0002"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2099-02-20",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    629,
+    "629000 Altres serveis"
+   ],
+   "balance": -30.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
+  },
+  {
+   "id": 20500,
+   "move_id": [
+    205,
+    "VAR/2098/01/0001"
+   ],
+   "account_type": "expense",
+   "matched_debit_ids": [],
+   "matched_credit_ids": [],
+   "display_type": "product",
+   "analytic_distribution": false,
+   "price_total": 0,
+   "date": "2098-02-20",
+   "journal_id": [
+    5,
+    "Operacions"
+   ],
+   "payment_id": false,
+   "statement_line_id": false,
+   "parent_state": "posted",
+   "move_type": "entry",
+   "account_id": [
+    626,
+    "626000 Serveis bancaris"
+   ],
+   "balance": 9.0,
+   "company_id": [
+    1,
+    "Entitat d'Exemple"
+   ]
   }
  ],
  "account.partial.reconcile": [

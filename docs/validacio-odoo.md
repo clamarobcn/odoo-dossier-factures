@@ -20,7 +20,7 @@ The label of `payment_method_line_id` repeats the journal name, so the plain nam
 
 Purchase receipts (`in_receipt`) share the journal and the numbering of vendor bills. Leaving them out shows up as gaps in the numbering, so the dossier includes them by default and marks them. They may have no supplier.
 
-Expenses booked as plain journal entries (payroll, bank fees) have no supplier document and stay out of the dossier.
+Expenses booked as plain journal entries (payroll, bank fees) usually have no document. They are listed in the register, in a section of their own, and only reach the PDF if they have one. Their references often name employees, so entries on group 64 accounts of the Spanish chart show a generic concept unless asked otherwise.
 
 ## Attachments
 
@@ -33,6 +33,8 @@ Scanners may declare pages much larger than A4: 2479×3507 points were found, wh
 
 - Effective resolution cannot be derived from the declared page size alone. Pages are normalized to A4 first.
 - Image data can be stored flipped, with the page transformation putting it right. Images must be replaced in place, leaving that transformation untouched.
+
+Real invoices also carry structural damage that readers tolerate: broken cross-reference tables, for example. Opening them with qpdf rebuilds them, so they are saved again and reported as repaired.
 
 ## API
 

@@ -34,6 +34,7 @@ BODY_FONT = Font(name=FONT_NAME, size=10)
 REPEATED_FONT = Font(name=FONT_NAME, size=10, color="808080")
 TOTAL_FONT = Font(name=FONT_NAME, bold=True, size=10)
 MARKED_FILL = PatternFill("solid", fgColor="FFF2CC")
+SECTION_FILL = PatternFill("solid", fgColor="D9E1F2")
 THIN = Side(style="thin", color="BFBFBF")
 CELL_BORDER = Border(top=THIN, bottom=THIN, left=THIN, right=THIN)
 TOTAL_BORDER = Border(top=Side(style="medium"), bottom=Side(style="medium"))
@@ -85,6 +86,8 @@ def _money_format(currency: str) -> str:
 
 
 def _remarks(invoice: Invoice, document_remarks: dict[int, str]) -> str:
+    if invoice.is_other_expense:
+        return t("excel.remark.not_in_dossier") if invoice.attachment is None else ""
     parts = []
     if invoice.is_refund:
         parts.append(t("excel.remark.refund"))
@@ -179,7 +182,8 @@ def _write_identity(
     sheet.date(row, "invoice_date", invoice.invoice_date, font)
     sheet.text(row, "supplier", invoice.partner_name, font)
     sheet.text(row, "vat", invoice.partner_vat, font)
-    sheet.text(row, "payment_state", t(f"payment_state.{invoice.payment_state}"), font)
+    state = t(f"payment_state.{invoice.payment_state}") if invoice.payment_state else ""
+    sheet.text(row, "payment_state", state, font)
     sheet.text(row, "quarter", t("excel.quarter", quarter=invoice.quarter), font)
     if page is not None:
         sheet.number(row, "page", page, font)
@@ -229,42 +233,65 @@ def _write_invoice(
     return row + 1
 
 
-def _write_totals(sheet: _Sheet, row: int, dossier: Dossier, has_project: bool) -> dict[str, str]:
-    """Write the totals and return each formula cell with its value, for ``_store_results``."""
-    last = row - 1
+def _write_total_row(
+    sheet: _Sheet,
+    row: int,
+    first: int,
+    invoices: list[Invoice],
+    label: str,
+    count_text: str,
+    has_project: bool,
+) -> dict[str, str]:
+    """Write a total over rows ``first`` to ``row - 1``; return each formula with its value.
+
+    SUBTOTAL ignores rows hidden by a filter, so the total follows what is shown, and it also
+    ignores other SUBTOTAL cells, so a grand total does not count the subtotals inside it.
+    """
     values = {
-        "untaxed": dossier.total_untaxed,
-        "tax": dossier.total_tax,
-        "total": dossier.total,
-        "amount_paid": dossier.total_paid,
+        "untaxed": sum((i.untaxed for i in invoices), Decimal("0.00")),
+        "tax": sum((i.tax for i in invoices), Decimal("0.00")),
+        "total": sum((i.total for i in invoices), Decimal("0.00")),
+        "amount_paid": sum((i.amount_paid for i in invoices), Decimal("0.00")),
     }
     if has_project:
         values["imputed"] = sum(
-            (i.imputation.amount for i in dossier.invoices if i.imputation), Decimal("0.00")
+            (i.imputation.amount for i in invoices if i.imputation), Decimal("0.00")
         )
     results: dict[str, str] = {}
     for key, value in values.items():
         letter = sheet.letter(key)
-        # SUBTOTAL ignores rows hidden by a filter, so the total follows what is shown.
         cell = sheet.ws.cell(
             row=row,
             column=sheet.index[key],
-            value=f"=SUBTOTAL(109,{letter}{FIRST_DATA_ROW}:{letter}{last})",
+            value=f"=SUBTOTAL(109,{letter}{first}:{letter}{row - 1})",
         )
         cell.number_format = sheet.money_format
         results[cell.coordinate] = str(value)
-    sheet.text(row, "internal", t("excel.total"))
-    count_key = (
-        "excel.invoice_count_with_receipts"
-        if dossier.params.include_receipts
-        else "excel.invoice_count"
-    )
-    sheet.text(row, "supplier", t(count_key, count=len(dossier.invoices)))
+    sheet.text(row, "internal", label)
+    sheet.text(row, "supplier", count_text)
     for position in range(1, len(sheet.columns) + 1):
         cell = sheet.ws.cell(row=row, column=position)
         cell.font = TOTAL_FONT
         cell.border = TOTAL_BORDER
     return results
+
+
+def _count_text(dossier: Dossier, documents: list[Invoice]) -> str:
+    key = (
+        "excel.invoice_count_with_receipts"
+        if dossier.params.include_receipts
+        else "excel.invoice_count"
+    )
+    return t(key, count=len(documents))
+
+
+def _write_section_title(sheet: _Sheet, row: int, text: str) -> None:
+    cell = sheet.ws.cell(row=row, column=sheet.index["internal"])
+    cell.value = text
+    cell.data_type = "s"
+    cell.font = TOTAL_FONT
+    for position in range(1, len(sheet.columns) + 1):
+        sheet.ws.cell(row=row, column=position).fill = SECTION_FILL
 
 
 def _setup_page(ws: Worksheet, last_row: int, column_count: int, dossier: Dossier) -> None:
@@ -342,20 +369,62 @@ def build_workbook(
     sheet = _Sheet(ws, dossier, columns)
     _write_title(ws, dossier, generated_on)
     _write_header(sheet)
-    row = FIRST_DATA_ROW
-    for invoice in dossier.invoices:
-        first = row
-        row = _write_invoice(
-            sheet, row, invoice, pages.get(invoice.id), has_project, document_remarks
+
+    def write_rows(invoices: list[Invoice], row: int) -> int:
+        for invoice in invoices:
+            first = row
+            row = _write_invoice(
+                sheet, row, invoice, pages.get(invoice.id), has_project, document_remarks
+            )
+            needs_review = not invoice.is_other_expense and (
+                invoice.attachment is None or invoice.id in document_remarks
+            )
+            for current in range(first, row):
+                for position in range(1, len(columns) + 1):
+                    cell = ws.cell(row=current, column=position)
+                    cell.border = CELL_BORDER
+                    if needs_review:
+                        cell.fill = MARKED_FILL
+        return row
+
+    documents = [i for i in dossier.invoices if not i.is_other_expense]
+    others = [i for i in dossier.invoices if i.is_other_expense]
+    row = write_rows(documents, FIRST_DATA_ROW)
+    results: dict[str, str] = {}
+    if others:
+        results |= _write_total_row(
+            sheet,
+            row,
+            FIRST_DATA_ROW,
+            documents,
+            t("excel.subtotal.documents"),
+            _count_text(dossier, documents),
+            has_project,
         )
-        needs_review = invoice.attachment is None or invoice.id in document_remarks
-        for current in range(first, row):
-            for position in range(1, len(columns) + 1):
-                cell = ws.cell(row=current, column=position)
-                cell.border = CELL_BORDER
-                if needs_review:
-                    cell.fill = MARKED_FILL
-    results = _write_totals(sheet, row, dossier, has_project)
+        row += 1
+        _write_section_title(sheet, row, t("excel.section.other_expenses"))
+        row += 1
+        section_start = row
+        row = write_rows(others, row)
+        results |= _write_total_row(
+            sheet,
+            row,
+            section_start,
+            others,
+            t("excel.subtotal.other_expenses"),
+            t("excel.other_expense_count", count=len(others)),
+            has_project,
+        )
+        row += 1
+        count_text = (
+            f"{_count_text(dossier, documents)} · "
+            f"{t('excel.other_expense_count', count=len(others))}"
+        )
+    else:
+        count_text = _count_text(dossier, documents)
+    results |= _write_total_row(
+        sheet, row, FIRST_DATA_ROW, dossier.invoices, t("excel.total"), count_text, has_project
+    )
     _setup_page(ws, row, len(columns), dossier)
 
     # Written next to the target and swapped in, so a failure never leaves half a file.

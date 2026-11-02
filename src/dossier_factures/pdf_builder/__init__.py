@@ -8,4 +8,15 @@ def pdf_filename(year: int) -> str:
     return t("output.pdf_filename", year=year)
 
 
-__all__ = ["Cancelled", "Document", "VolumeResult", "build_volume", "pdf_filename"]
+def quarter_filename(year: int, quarter: int) -> str:
+    return t("output.pdf_filename_quarter", year=year, quarter=quarter)
+
+
+__all__ = [
+    "Cancelled",
+    "Document",
+    "VolumeResult",
+    "build_volume",
+    "pdf_filename",
+    "quarter_filename",
+]

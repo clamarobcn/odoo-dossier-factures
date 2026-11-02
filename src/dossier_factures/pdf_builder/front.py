@@ -110,7 +110,10 @@ def _invoice_row(
         "payment_date": dates,
         "payment_form": forms,
         "amount_paid": paid,
-        "payment_state": fit("payment_state", t(f"payment_state.{invoice.payment_state}")),
+        "payment_state": fit(
+            "payment_state",
+            t(f"payment_state.{invoice.payment_state}") if invoice.payment_state else "",
+        ),
         "page": [str(first_page)],
     }
     if "imputed" in columns and invoice.imputation:
@@ -235,6 +238,15 @@ def draw_index(
     return links
 
 
+def _other_expenses_entry(dossier: Dossier) -> list[tuple[str, str]]:
+    others = dossier.undocumented_expenses
+    if not others:
+        return []
+    total = format_amount(sum((i.total for i in others), Decimal("0.00")))
+    value = t("pdf.cover.other_expenses_value", count=len(others), total=total)
+    return [(t("pdf.cover.other_expenses"), value)]
+
+
 def draw_cover(
     canvas: Canvas,
     dossier: Dossier,
@@ -281,6 +293,7 @@ def draw_cover(
     entries = [
         (t(count_key), str(len(invoices))),
         (t("pdf.cover.total"), f"{format_amount(total)} €"),
+        *_other_expenses_entry(dossier),
         (t("pdf.cover.filters"), describe_filters(dossier)),
         (t("pdf.cover.generated"), format_date(generated_on)),
     ]

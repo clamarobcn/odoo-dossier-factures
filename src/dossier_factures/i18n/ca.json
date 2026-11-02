@@ -39,9 +39,14 @@
   "notice.unreconciled_payment": "Té un pagament actiu sense conciliar amb la factura: {payment} del {date}, {amount} €",
   "notice.payment_mismatch": "Els pagaments no coincideixen entre les dues fonts d'Odoo ({lines} € i {widget} €)",
   "notice.document_unreadable": "No s'ha pogut llegir el document adjunt: {name}",
+  "notice.document_repaired": "El document adjunt estava malmès i s'ha reparat: {name}",
+  "notice.other_expenses": "{count} despeses sense document ({total} €) consten només a l'Excel",
+  "notice.possible_duplicate": "Possible assentament duplicat, {amount} € el {month}: {names}",
   "notice.missing_supplier": "No té proveïdor assignat",
   "notice.receipts_excluded": "{count} rebuts de compra confirmats ({total} €) no s'hi inclouen",
   "notice.foreign_currency": "Factura en {currency}; els imports es mostren en la moneda de l'entitat",
+
+  "expense.personnel": "Despesa de personal",
 
   "filters.none": "Sense filtres",
   "filters.project": "Projecte: {name}",
@@ -50,6 +55,7 @@
 
   "output.excel_filename": "Registre de factures de proveïdors {year}.xlsx",
   "output.pdf_filename": "Dossier de factures de proveïdors {year}.pdf",
+  "output.pdf_filename_quarter": "Dossier de factures de proveïdors {year} T{quarter}.pdf",
   "output.folder": "{year} - generat {date}",
 
   "excel.sheet": "Registre {year}",
@@ -84,6 +90,11 @@
   "excel.remark.refund": "Rectificativa",
   "excel.remark.receipt": "Rebut de compra",
   "excel.remark.unreadable": "Document il·legible",
+  "excel.remark.not_in_dossier": "Sense document",
+  "excel.section.other_expenses": "Altres despeses, sense document al dossier",
+  "excel.subtotal.documents": "Subtotal factures i rebuts",
+  "excel.subtotal.other_expenses": "Subtotal altres despeses",
+  "excel.other_expense_count": "{count} despeses",
 
   "pdf.title": "Dossier de factures de proveïdors",
   "pdf.fiscal_year": "Exercici {year}",
@@ -92,6 +103,8 @@
   "pdf.cover.count": "Nombre de factures",
   "pdf.cover.count_with_receipts": "Nombre de factures i rebuts",
   "pdf.cover.total": "Import total",
+  "pdf.cover.other_expenses": "Altres despeses sense document",
+  "pdf.cover.other_expenses_value": "{count} ({total} €), només al registre Excel",
   "pdf.cover.generated": "Data de generació",
   "pdf.index.title": "Índex",
   "pdf.index.column.order": "Núm.",
@@ -118,10 +131,12 @@
   "pdf.band.no_supplier": "(sense proveïdor)",
   "pdf.band.page": "pàg. {current}/{total}",
   "pdf.footer.page": "Pàg. {current} de {total}",
+  "pdf.quarter": "Trimestre {quarter}",
   "pdf.warning.no_document": "Factura sense document adjunt",
   "pdf.warning.unreadable": "No s'ha pogut llegir el document adjunt",
 
   "step.downloading": "Descarregant documents…",
+  "step.compressing": "Comprimint les imatges…",
   "step.building_pdf": "Muntant el dossier PDF…",
   "step.building_excel": "Generant el registre Excel…",
   "step.done": "Fet.",
@@ -145,5 +160,13 @@
   "cli.help.cache": "Carpeta on reaprofitar documents ja descarregats",
   "cli.pages": "Pàgines",
   "cli.help.out": "Carpeta de sortida",
-  "cli.help.only_invoices": "Deixa fora els rebuts de compra"
+  "cli.help.only_invoices": "Deixa fora els rebuts de compra",
+  "cli.help.no_other_expenses": "Deixa fora les despeses que no són factures ni rebuts",
+  "cli.help.personnel_names": "Mostra el concepte original de les despeses de personal, amb noms",
+  "cli.help.split": "Genera un PDF per trimestre",
+  "cli.help.no_compress": "No recomprimeixis les imatges",
+  "cli.help.dpi": "Resolució de les imatges recomprimides",
+  "cli.help.quality": "Qualitat JPEG de les imatges recomprimides",
+  "cli.size": "Mida",
+  "cli.oversize": "El PDF supera {limit} MB: es pot dividir per trimestres amb --split-quarters"
 }

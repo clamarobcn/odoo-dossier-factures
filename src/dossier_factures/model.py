@@ -34,6 +34,9 @@ class NoticeCode(StrEnum):
     MISSING_SUPPLIER = "missing_supplier"
     RECEIPTS_EXCLUDED = "receipts_excluded"
     DOCUMENT_UNREADABLE = "document_unreadable"
+    DOCUMENT_REPAIRED = "document_repaired"
+    OTHER_EXPENSES = "other_expenses"
+    POSSIBLE_DUPLICATE = "possible_duplicate"
 
 
 @dataclass(frozen=True)
@@ -123,6 +126,10 @@ class Invoice:
         return self.move_type == "in_receipt"
 
     @property
+    def is_other_expense(self) -> bool:
+        return self.move_type == "entry"
+
+    @property
     def amount_paid(self) -> Decimal:
         return sum((p.amount for p in self.payments), Decimal("0.00"))
 
@@ -142,6 +149,8 @@ class ExtractParams:
     analytic_account_id: int | None = None
     supplier_id: int | None = None
     include_receipts: bool = True
+    include_other_expenses: bool = True
+    show_personnel_names: bool = False
 
 
 @dataclass
@@ -152,6 +161,15 @@ class Dossier:
     notices: list[Notice]
     analytic_account_name: str = ""
     supplier_name: str = ""
+
+    @property
+    def documented(self) -> list[Invoice]:
+        """What goes in the PDF: everything except other expenses that have no document."""
+        return [i for i in self.invoices if not i.is_other_expense or i.attachment is not None]
+
+    @property
+    def undocumented_expenses(self) -> list[Invoice]:
+        return [i for i in self.invoices if i.is_other_expense and i.attachment is None]
 
     @property
     def total_untaxed(self) -> Decimal:

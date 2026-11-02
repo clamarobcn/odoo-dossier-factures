@@ -9,6 +9,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from . import __version__
+from .compress import CompressOptions
 from .config import AppConfig
 from .credentials import get_api_key
 from .excel_builder import build_workbook, excel_filename
@@ -65,6 +66,18 @@ def _build_parser() -> argparse.ArgumentParser:
         "--only-invoices", action="store_true", help=t("cli.help.only_invoices")
     )
     generate_parser.add_argument("--cache-dir", type=Path, help=t("cli.help.cache"))
+    generate_parser.add_argument(
+        "--no-other-expenses", action="store_true", help=t("cli.help.no_other_expenses")
+    )
+    generate_parser.add_argument(
+        "--show-personnel-names", action="store_true", help=t("cli.help.personnel_names")
+    )
+    generate_parser.add_argument("--split-quarters", action="store_true", help=t("cli.help.split"))
+    generate_parser.add_argument(
+        "--no-compress", action="store_true", help=t("cli.help.no_compress")
+    )
+    generate_parser.add_argument("--dpi", type=int, help=t("cli.help.dpi"))
+    generate_parser.add_argument("--quality", type=int, help=t("cli.help.quality"))
     return parser
 
 
@@ -116,8 +129,24 @@ def _print_excel(backend: Json2Backend, args: argparse.Namespace, config: AppCon
 
 
 def _print_generate(backend: Json2Backend, args: argparse.Namespace, config: AppConfig) -> None:
-    params = ExtractParams(args.year, None, args.project, args.supplier, not args.only_invoices)
-    options = GenerateOptions(args.out, config.payment_form_overrides, args.cache_dir)
+    params = ExtractParams(
+        args.year,
+        None,
+        args.project,
+        args.supplier,
+        not args.only_invoices,
+        not (args.only_invoices or args.no_other_expenses),
+        args.show_personnel_names,
+    )
+    compress = CompressOptions(args.dpi or config.target_dpi, args.quality or config.jpeg_quality)
+    options = GenerateOptions(
+        args.out,
+        config.payment_form_overrides,
+        args.cache_dir,
+        compress=None if args.no_compress else compress,
+        split_quarters=args.split_quarters,
+        split_threshold_mb=config.split_threshold_mb,
+    )
     last = {"message": ""}
 
     def progress(message: str, current: int | None = None, total: int | None = None) -> None:
@@ -129,8 +158,13 @@ def _print_generate(backend: Json2Backend, args: argparse.Namespace, config: App
     print(f"{t('cli.invoices')}: {len(result.dossier.invoices)}")
     print(f"{t('cli.total')}: {format_amount(result.dossier.total)} €")
     print(f"{t('cli.pages')}: {result.page_count}")
+    for volume in result.volumes:
+        size = volume.path.stat().st_size / 1024 / 1024
+        print(f"  {volume.path.name}: {volume.page_count} pàg., {size:.1f} MB")
     for code, count in Counter(n.code for n in result.notices).items():
         print(f"  {count} x {code}")
+    if result.oversize:
+        print(t("cli.oversize", limit=config.split_threshold_mb))
     print(f"{t('cli.saved')} {result.folder}")
 
 

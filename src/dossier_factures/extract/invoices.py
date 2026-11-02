@@ -11,6 +11,7 @@ from ..model import Company, Dossier, ExtractParams, Invoice, Notice, NoticeCode
 from ..odoo_client import OdooBackend
 from .analytics import compute_imputations
 from .attachments import select_attachments
+from .other_expenses import fetch_other_expenses
 from .payments import fetch_payments
 
 MOVE_TYPES = ["in_invoice", "in_refund"]
@@ -176,6 +177,14 @@ def extract_dossier(
 
     if not params.include_receipts and params.analytic_account_id is None:
         notices.extend(_excluded_receipts(backend, scope))
+
+    if params.include_other_expenses and params.supplier_id is None:
+        others, other_notices = fetch_other_expenses(backend, params, company, form_overrides)
+        others.sort(key=lambda i: (sort_key(i.name), i.id))
+        for number, other in enumerate(others, start=len(invoices) + 1):
+            other.order_number = number
+        invoices.extend(others)
+        notices.extend(other_notices)
 
     return Dossier(
         company=company,

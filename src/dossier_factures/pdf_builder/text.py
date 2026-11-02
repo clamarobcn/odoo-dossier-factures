@@ -47,17 +47,19 @@ def wrap(text: str, font: str, size: float, width: float) -> list[str]:
 
 
 def _document_label(invoice: Invoice) -> str:
+    if invoice.is_other_expense:
+        return ""
     key = "receipt" if invoice.is_receipt else "refund" if invoice.is_refund else "invoice"
     return t(f"pdf.band.{key}", ref=invoice.ref).strip()
 
 
 def payment_summary(invoice: Invoice) -> str:
     """Return ``Pagada 12/03/2026 – Banc``, listing every payment of the invoice."""
-    state = t(f"payment_state.{invoice.payment_state}")
+    state = t(f"payment_state.{invoice.payment_state}") if invoice.payment_state else ""
     if not invoice.payments:
         return state
     details = "; ".join(f"{format_date(p.date)} – {p.form}" for p in invoice.payments)
-    return f"{state} {details}"
+    return f"{state} {details}".strip()
 
 
 def order_label(invoice: Invoice) -> str:
@@ -67,14 +69,13 @@ def order_label(invoice: Invoice) -> str:
 def band_lines(invoice: Invoice) -> tuple[str, str]:
     supplier = invoice.partner_name or t("pdf.band.no_supplier")
     first = " · ".join((order_label(invoice), invoice.name, supplier))
-    second = " · ".join(
-        (
-            _document_label(invoice),
-            format_date(invoice.invoice_date),
-            f"{format_amount(invoice.total)} €",
-            payment_summary(invoice),
-        )
+    parts = (
+        _document_label(invoice),
+        format_date(invoice.invoice_date),
+        f"{format_amount(invoice.total)} €",
+        payment_summary(invoice),
     )
+    second = " · ".join(part for part in parts if part)
     return first, second
 
 

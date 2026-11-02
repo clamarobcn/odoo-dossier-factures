@@ -54,7 +54,7 @@ class _PlannedPage:
     size: tuple[float, float]
 
 
-def _form_size(form) -> tuple[float, float]:
+def form_size(form) -> tuple[float, float]:
     """Size of a page as seen on screen, once its rotation and scale are applied."""
     box = [float(v) for v in form.BBox]
     a, b, c, d = (float(form.Matrix[i]) for i in range(4)) if "/Matrix" in form else (1, 0, 0, 1)
@@ -64,7 +64,7 @@ def _form_size(form) -> tuple[float, float]:
 
 def _page_sizes(path: Path) -> list[tuple[float, float]]:
     with pikepdf.open(path) as pdf:
-        return [_form_size(page.as_form_xobject()) for page in pdf.pages]
+        return [form_size(page.as_form_xobject()) for page in pdf.pages]
 
 
 def _open_source(path: Path) -> pikepdf.Pdf:

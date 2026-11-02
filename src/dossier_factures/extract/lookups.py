@@ -11,16 +11,20 @@ from .attachments import ATTACHMENT_FIELDS, detect_content_field
 from .invoices import MOVE_FIELDS, base_domain, list_companies, year_domain
 
 REQUIRED_FIELDS = {
-    "account.move": MOVE_FIELDS,
+    "account.move": [*MOVE_FIELDS, "date"],
     "account.move.line": [
+        "account_id",
         "account_type",
         "analytic_distribution",
+        "balance",
         "date",
         "display_type",
         "journal_id",
         "matched_credit_ids",
         "matched_debit_ids",
         "move_id",
+        "move_type",
+        "parent_state",
         "payment_id",
         "price_total",
         "statement_line_id",

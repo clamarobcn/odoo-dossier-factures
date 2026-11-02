@@ -192,7 +192,7 @@ def test_index_links_go_to_the_first_page_of_each_invoice(result):
         assert len(annotations) == 13
         order = {pdf.pages[i].obj.objgen: i for i in range(len(pdf.pages))}
         targets = [order[a.Dest[0].objgen] for a in annotations]
-    expected = [first_pages(result)[i.id] - 1 for i in result.dossier.invoices]
+    expected = [first_pages(result)[i.id] - 1 for i in result.dossier.documented]
     assert targets == expected
     for number, target in enumerate(targets, start=1):
         assert f"Núm. {number:03d}" in page_text(pdf_path(result), target)
@@ -215,16 +215,23 @@ def test_outline_has_one_entry_per_invoice_at_its_page(result):
         assert titles[1] == "001 – FC/2099/01/0001 – Proveïdor Àlfa"
         order = {pdf.pages[i].obj.objgen: i for i in range(len(pdf.pages))}
         pages = [order[item.destination[0].objgen] for item in items[1:]]
-    assert pages == [first_pages(result)[i.id] - 1 for i in result.dossier.invoices]
+    assert pages == [first_pages(result)[i.id] - 1 for i in result.dossier.documented]
 
 
 def test_excel_pages_match_the_pdf(result):
     ws = load_workbook(result.excel_path).active
     names = [c.value for c in ws[HEADER_ROW]]
+    checked = 0
     for row in range(HEADER_ROW + 1, ws.max_row):
         internal = ws.cell(row=row, column=names.index("Registre intern") + 1).value
         page = ws.cell(row=row, column=names.index("Pàgina al dossier") + 1).value
-        assert page == first_pages(result)[invoice(result, internal).id]
+        order = ws.cell(row=row, column=names.index("Núm. d'ordre") + 1).value
+        if order is None:
+            continue
+        item = invoice(result, internal)
+        assert page == first_pages(result).get(item.id)
+        checked += 1
+    assert checked > 13
 
 
 def test_missing_document_gets_a_warning_page_and_is_marked(result):
@@ -456,7 +463,7 @@ def test_document_with_annotations_keeps_them(backend, scenario, documents_ready
 def test_project_filter_adds_columns_to_the_index(backend, documents_ready, tmp_path):
     result = generate(
         backend,
-        ExtractParams(YEAR, analytic_account_id=7),
+        ExtractParams(YEAR, analytic_account_id=7, include_other_expenses=False),
         GenerateOptions(tmp_path, generated_on=TODAY),
     )
     text = page_text(pdf_path(result), 1)
@@ -542,7 +549,7 @@ def test_long_text_shrinks_and_is_cut_only_as_a_last_resort():
 
 def test_long_index_spreads_over_pages_with_totals_at_the_end(backend, documents_ready):
     dossier = extract_dossier(backend, ExtractParams(YEAR))
-    many = [dossier.invoices[0]] * 300
+    many = [dossier.documented[0]] * 300
     layout = layout_index(many, {}, set(), False)
     assert len(layout.pages) > 3
     assert layout.pages[-1][-1].cells["internal"] == ["Total"]
@@ -569,3 +576,34 @@ def test_long_index_keeps_the_page_numbers_consistent(backend, documents_ready, 
     assert linked == 120
     assert f"Núm. {120:03d}" in page_text(result.path, result.page_count - 1)
     assert result.first_pages[1] == 2 + index_pages
+
+
+def test_undocumented_expenses_stay_out_of_the_pdf_but_in_the_excel(result):
+    text = "\n".join(all_text(pdf_path(result)))
+    assert "NOM/2099/01/0001" not in text
+    assert "Despesa de personal" not in text
+    assert {i.name for i in result.dossier.undocumented_expenses} >= {"NOM/2099/01/0001"}
+    registered = {
+        c.value
+        for row in load_workbook(result.excel_path).active.iter_rows(min_row=HEADER_ROW + 1)
+        for c in row
+        if isinstance(c.value, str)
+    }
+    assert "NOM/2099/01/0001" in registered
+
+
+def test_cover_counts_the_pdf_and_points_to_the_excel(result):
+    text = page_text(pdf_path(result), 0)
+    assert "1.662,50 €" in text
+    assert "Altres despeses sense document" in text
+    assert "4 (1.282,00 €), només al registre Excel" in text
+
+
+def test_entry_with_a_document_gets_its_page(backend, scenario, documents_ready, tmp_path):
+    move = next(m for m in scenario["account.move"] if m["id"] == 203)
+    move["message_main_attachment_id"] = [1, "factura.pdf"]
+    result = _generate_with(backend, tmp_path)
+    item = invoice(result, "VAR/2099/02/0001")
+    text = page_text(pdf_path(result), first_pages(result)[item.id] - 1)
+    assert "VAR/2099/02/0001" in text
+    assert "Comissió de manteniment" in text

@@ -46,6 +46,7 @@ def convert(source, target_format, outdir):
 
 @pytest.fixture
 def dossier(backend):
+    # Includes other expenses, to check that the grand total does not count the subtotals.
     return extract_dossier(backend, ExtractParams(2099))
 
 
@@ -67,6 +68,7 @@ def test_formulas_calculate_the_same_totals_without_stored_results(dossier, tmp_
         return Decimal(text.replace(",", ""))
 
     assert total("Total") == dossier.total
+    assert dossier.undocumented_expenses
     assert total("Base imposable") == dossier.total_untaxed
     assert total("IVA") == dossier.total_tax
     assert total("Import pagat") == dossier.total_paid

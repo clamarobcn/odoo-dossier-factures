@@ -35,7 +35,7 @@ COLUMNS = [
 
 @pytest.fixture
 def dossier(backend):
-    return extract_dossier(backend, ExtractParams(YEAR))
+    return extract_dossier(backend, ExtractParams(YEAR, include_other_expenses=False))
 
 
 def build(dossier, tmp_path, **kwargs):
@@ -239,7 +239,9 @@ def test_print_and_freeze_setup(dossier, tmp_path):
 
 def test_project_columns_only_appear_with_a_project_filter(backend, dossier, tmp_path):
     assert "% imputat al projecte" not in Register(build(dossier, tmp_path)).names
-    filtered = extract_dossier(backend, ExtractParams(YEAR, analytic_account_id=7))
+    filtered = extract_dossier(
+        backend, ExtractParams(YEAR, analytic_account_id=7, include_other_expenses=False)
+    )
     register = Register(build(filtered, tmp_path))
     row = register.rows_of("FC/2099/02/0001")[0]
     assert register.value(row, "% imputat al projecte") == pytest.approx(0.6667)
@@ -272,7 +274,7 @@ def test_ampersand_in_entity_name_survives_the_print_footer(dossier, tmp_path):
 
 
 def test_empty_dossier_still_produces_a_valid_file(backend, tmp_path):
-    empty = extract_dossier(backend, ExtractParams(1990))
+    empty = extract_dossier(backend, ExtractParams(1990, include_other_expenses=False))
     register = Register(build(empty, tmp_path), data_only=True)
     assert register.value(register.last, "Proveïdor") == "0 factures i rebuts"
 
@@ -297,7 +299,9 @@ def test_output_folder_is_named_and_never_reused(tmp_path):
 
 
 def test_only_invoices_is_described_as_no_filter(backend, tmp_path):
-    dossier = extract_dossier(backend, ExtractParams(YEAR, include_receipts=False))
+    dossier = extract_dossier(
+        backend, ExtractParams(YEAR, include_receipts=False, include_other_expenses=False)
+    )
     register = Register(build(dossier, tmp_path))
     assert register.ws["A3"].value == "Sense filtres"
     assert register.value(register.last, "Proveïdor") == "12 factures"
@@ -315,3 +319,54 @@ def test_receipts_are_marked_and_described(dossier, tmp_path):
 @pytest.mark.skipif(os.name != "posix", reason="POSIX permissions")
 def test_file_is_readable_by_other_users_like_any_saved_document(dossier, tmp_path):
     assert build(dossier, tmp_path).stat().st_mode & 0o044 == 0o044
+
+
+@pytest.fixture
+def full(backend):
+    return extract_dossier(backend, ExtractParams(YEAR))
+
+
+def test_other_expenses_have_a_section_with_subtotals(full, tmp_path):
+    register = Register(build(full, tmp_path), data_only=True)
+    labels = [
+        register.value(r, "Registre intern") for r in range(HEADER_ROW + 1, register.last + 1)
+    ]
+    assert "Subtotal factures i rebuts" in labels
+    assert "Altres despeses, sense document al dossier" in labels
+    assert "Subtotal altres despeses" in labels
+    assert labels[-1] == "Total"
+
+    def value(label, column):
+        return Decimal(str(register.value(HEADER_ROW + 1 + labels.index(label), column)))
+
+    documents = sum(i.total for i in full.documented)
+    assert value("Subtotal factures i rebuts", "Total") == documents
+    assert value("Subtotal altres despeses", "Total") == Decimal("1282.00")
+    assert value("Total", "Total") == full.total == documents + Decimal("1282.00")
+    assert register.value(register.last, "Proveïdor") == "13 factures i rebuts · 4 despeses"
+
+
+def test_grand_total_formula_covers_everything(full, tmp_path):
+    register = Register(build(full, tmp_path))
+    assert register.value(register.last, "Total").startswith("=SUBTOTAL(109,")
+    assert f"{HEADER_ROW + 1}:" in register.value(register.last, "Total")
+
+
+def test_undocumented_expense_row(full, tmp_path):
+    register = Register(build(full, tmp_path))
+    row = register.rows_of("VAR/2099/02/0001")[0]
+    assert register.value(row, "Proveïdor") == "Comissió de manteniment"
+    assert register.value(row, "Núm. factura proveïdor") in ("", None)
+    assert register.value(row, "Observacions") == "Sense document"
+    assert register.value(row, "Pàgina al dossier") is None
+    assert register.value(row, "Estat del pagament") in ("", None)
+    assert register.value(row, "Import pagat") == 12
+    assert register.value(row, "Forma de pagament") == "Banc Exemple"
+    assert register.value(row, "Trimestre") == "T1"
+    assert not register.ws.cell(row=row, column=1).fill.fgColor.rgb.endswith("FFF2CC")
+
+
+def test_personnel_names_are_not_in_the_workbook_by_default(full, tmp_path):
+    ws = Register(build(full, tmp_path)).ws
+    text = " ".join(str(c.value) for row in ws.iter_rows() for c in row if isinstance(c.value, str))
+    assert "PERSONA EXEMPLE" not in text
