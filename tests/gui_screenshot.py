@@ -50,6 +50,8 @@ def main(out: str) -> None:
     out_dir = Path(out)
     out_dir.mkdir(parents=True, exist_ok=True)
     tables = json.loads((FIXTURES / "odoo_scenario.json").read_text(encoding="utf-8"))
+    # One company, like most associations: the pictures also go in the user guide.
+    del tables["res.company"][1:]
     backend = FakeBackend(fill_documents(tables))
     app_module.set_api_key = lambda *_args: True
     app_module.get_api_key = lambda *_args: ""

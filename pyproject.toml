@@ -23,6 +23,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pypdfium2>=4.30", "pytest>=8", "ruff>=0.6"]
+build = ["packaging>=24", "pyinstaller>=6.10,<7"]
 
 [project.scripts]
 dossier-factures = "dossier_factures.cli:main"

@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ".[dev,build]"
+      - name: The tag must match the program's version
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          version=$(python -c "import dossier_factures; print(dossier_factures.__version__)")
+          test "${GITHUB_REF_NAME}" = "v${version}"
+      - run: pytest
+        env:
+          REQUIRE_TK: "1"
+          REQUIRE_WINDOWS_VAULT: "1"
+      - run: python packaging/third_party_licenses.py THIRD_PARTY_LICENSES.txt
+      - run: pyinstaller packaging/dossier_factures.spec --noconfirm --distpath dist
+      - name: Try the programs against a simulated Odoo
+        run: python tests/exe_smoke.py dist screenshots
+      - name: Collect the release files
+        shell: bash
+        run: |
+          mv THIRD_PARTY_LICENSES.txt dist/
+          (cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: programs
+          path: dist
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exe-screenshots
+          path: screenshots
+          if-no-files-found: ignore
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: programs
+          path: dist
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=""
+          case "${GITHUB_REF_NAME}" in *rc*) prerelease="--prerelease" ;; esac
+          gh release create "${GITHUB_REF_NAME}" dist/* \
+            --title "Dossier de factures ${GITHUB_REF_NAME#v}" \
+            --notes-file packaging/release_notes.md $prerelease
