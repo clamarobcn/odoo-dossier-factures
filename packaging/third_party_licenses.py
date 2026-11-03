@@ -89,7 +89,7 @@ def main(path: str) -> int:
             parts.append(f"Native libraries included: {', '.join(libraries)}\n")
         for file in files:
             parts.append(f"\n--- {file.name} ---\n")
-            parts.append(file.read_text(encoding="utf-8", errors="replace"))
+            parts.append(Path(file.locate()).read_text(encoding="utf-8", errors="replace"))
     Path(path).write_text("\n".join(parts), encoding="utf-8")
     if problems:
         print("Licences to review:", *problems, sep="\n  ")
