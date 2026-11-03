@@ -14,7 +14,7 @@ from dossier_factures.odoo_client import (
     OdooApiError,
     ServerBusyError,
     UnexpectedRedirectError,
-    guess_database,
+    database_from_url,
     normalize_base_url,
 )
 
@@ -196,6 +196,9 @@ def test_invalid_urls(raw):
         normalize_base_url(raw)
 
 
-def test_guess_database():
-    assert guess_database("https://demo.odoo.com/odoo") == "demo"
-    assert guess_database("https://erp.example.com") == ""
+def test_database_comes_from_the_address_only_when_it_says_so():
+    assert database_from_url("https://demo.odoo.com/odoo") == ""
+    assert database_from_url("demo.odoo.com") == ""
+    assert database_from_url("https://erp.example.com/odoo?db=entitat") == "entitat"
+    assert database_from_url("erp.example.com/?db=entitat") == "entitat"
+    assert database_from_url("") == ""

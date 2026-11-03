@@ -4,7 +4,7 @@ import logging
 import time
 from collections.abc import Callable
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 import requests
 
@@ -49,10 +49,11 @@ def normalize_base_url(url: str) -> str:
     return f"{parts.scheme}://{parts.netloc}"
 
 
-def guess_database(url: str) -> str:
-    """Odoo Online databases are named after their subdomain."""
-    host = urlsplit(normalize_base_url(url)).hostname or ""
-    return host.removesuffix(".odoo.com") if host.endswith(".odoo.com") else ""
+def database_from_url(url: str) -> str:
+    """The server finds the database from its address; only a shared server needs ``?db=``."""
+    url = (url or "").strip()
+    query = urlsplit(url if "://" in url else f"https://{url}").query
+    return parse_qs(query).get("db", [""])[0]
 
 
 class Json2Backend(OdooBackend):

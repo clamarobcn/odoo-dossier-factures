@@ -60,7 +60,7 @@ def harness(monkeypatch, backend, scenario, tmp_path):
     dialogs = []
     monkeypatch.setattr(app_module, "get_api_key", lambda *_a: "")
     monkeypatch.setattr(
-        app_module, "set_api_key", lambda url, user, key: saved.update({(url, user): key}) or True
+        app_module, "set_api_key", lambda url, key: saved.update({url: key}) or True
     )
     monkeypatch.setattr(
         app_module.messagebox,
@@ -76,17 +76,23 @@ def harness(monkeypatch, backend, scenario, tmp_path):
     root.withdraw()
     config_file = tmp_path / "config" / "config.json"
     built = []
+    factory_calls = []
+
+    def default_factory(url, key, database):
+        factory_calls.append((url, database))
+        return backend
 
     def make(config=None, factory=None):
         config = config if config is not None else AppConfig(output_dir=str(tmp_path / "out"))
         app = app_module.App(
             root,
             config=config,
-            backend_factory=factory or (lambda url, key, db: backend),
+            backend_factory=factory or default_factory,
             config_file=config_file,
         )
         built.append(app)
         harness.app = app
+        harness.factory_calls = factory_calls
         return app
 
     harness = type(
@@ -116,9 +122,8 @@ def harness(monkeypatch, backend, scenario, tmp_path):
 
 def connect(harness, app):
     app.url.set("https://entitat.odoo.com/odoo/action-1")
-    app.user.set("prova@example.invalid")
     app.api_key.set("clau-de-prova")
-    app.on_test()
+    app.on_connect()
     pump(harness, lambda: app.connection_status["text"] != "Connectant…")
 
 
@@ -129,24 +134,56 @@ def generate(harness, app):
 
 
 @needs_display
-def test_generate_needs_a_tested_connection_first(harness):
+def test_first_run_only_asks_for_the_address_and_the_key(harness):
     app = harness.make()
     assert str(app.generate_button["state"]) == "disabled"
-    assert "Sense connexió" in app.connection_status["text"]
+    assert app.connection_form.winfo_manager() == "grid"
+    assert app.generation_frame.winfo_manager() == ""
+    assert app.connected_bar.winfo_manager() == ""
+    assert app.result_frame.winfo_manager() == ""
+    assert not hasattr(app, "database")
+    assert not hasattr(app, "user")
+
+
+@needs_display
+def test_once_connected_only_the_year_and_the_button_remain(harness):
+    app = harness.make()
+    connect(harness, app)
+    assert app.connection_form.winfo_manager() == ""
+    assert app.connected_bar.winfo_manager() == "grid"
+    assert app.generation_frame.winfo_manager() == "grid"
+    assert app.options_frame.winfo_manager() == ""
+    assert app.cancel_button.winfo_manager() == ""
+    assert app.result_frame.winfo_manager() == ""
+    app.on_toggle_options()
+    assert app.options_frame.winfo_manager() == "grid"
+    app.on_toggle_options()
+    assert app.options_frame.winfo_manager() == ""
+
+
+@needs_display
+def test_changing_the_connection_brings_the_form_back(harness):
+    app = harness.make()
+    connect(harness, app)
+    app.on_change_connection()
+    assert app.backend is None
+    assert app.connection_form.winfo_manager() == "grid"
+    assert app.generation_frame.winfo_manager() == ""
+    assert app.api_key.get() == "clau-de-prova"
 
 
 @needs_display
 def test_connection_fills_the_drop_downs_and_saves_only_in_the_vault(harness):
     app = harness.make()
     connect(harness, app)
-    assert "Connectat" in app.connection_status["text"]
+    assert "Connectat a" in app.connected_label["text"]
     assert str(app.generate_button["state"]) == "normal"
-    assert app.database.get() == "entitat"
+    assert harness.factory_calls == [("https://entitat.odoo.com", "")]
     assert app.year.get() == "2099"
     assert app.project["values"][0] == "(Tots)"
     assert "[P7] Projecte Set" in app.project["values"]
     assert list(app.supplier["values"]) == ["(Tots)", "Proveïdor Àlfa", "Proveïdor Beta"]
-    assert harness.saved == {("https://entitat.odoo.com", "prova@example.invalid"): "clau-de-prova"}
+    assert harness.saved == {"https://entitat.odoo.com": "clau-de-prova"}
     text = harness.config_file.read_text(encoding="utf-8")
     assert "clau-de-prova" not in text
     assert json.loads(text)["url"] == "https://entitat.odoo.com/odoo/action-1"
@@ -164,19 +201,23 @@ def test_several_companies_show_a_selector_only_then(harness, scenario):
 
 
 @needs_display
-def test_editing_the_connection_asks_to_test_again(harness):
+def test_database_can_be_given_in_the_address(harness):
     app = harness.make()
-    connect(harness, app)
-    app.api_key.set("una-altra")
-    assert str(app.generate_button["state"]) == "disabled"
-    assert app.backend is None
+    app.url.set("https://servidor.example.invalid/?db=entitat")
+    app.api_key.set("clau-de-prova")
+    app.on_connect()
+    pump(harness, lambda: app.backend is not None)
+    assert harness.factory_calls == [("https://servidor.example.invalid", "entitat")]
+    assert json.loads(harness.config_file.read_text(encoding="utf-8"))["url"].endswith(
+        "?db=entitat"
+    )
 
 
 @needs_display
 def test_missing_key_is_said_without_calling_odoo(harness):
     app = harness.make()
     app.url.set("https://entitat.odoo.com")
-    app.on_test()
+    app.on_connect()
     assert app.connection_status["text"] == "Escriviu la clau d'API."
     assert harness.backend.calls == []
 
@@ -197,6 +238,7 @@ def test_wrong_key_shows_a_clear_message(harness):
     assert "caducat" in app.connection_status["text"]
     assert str(app.generate_button["state"]) == "disabled"
     assert harness.saved == {}
+    assert app.api_key.get() == ""
 
 
 @needs_display
@@ -204,7 +246,7 @@ def test_invalid_url_shows_a_clear_message(harness):
     app = harness.make()
     app.url.set("http://entitat.odoo.com")
     app.api_key.set("x")
-    app.on_test()
+    app.on_connect()
     assert "https://" in app.connection_status["text"]
 
 
@@ -213,8 +255,133 @@ def test_saved_connection_connects_on_start(harness, monkeypatch):
     monkeypatch.setattr(app_module, "get_api_key", lambda *_a: "desada")
     app = harness.make(AppConfig(url="https://entitat.odoo.com", output_dir=str(harness.out)))
     pump(harness, lambda: app.backend is not None)
+    pump(harness, lambda: not app.tasks.busy)
     assert app.api_key.get() == "desada"
     assert str(app.generate_button["state"]) == "normal"
+    assert app.connection_form.winfo_manager() == ""
+
+
+@needs_display
+def test_expired_key_on_start_asks_only_for_a_new_key(harness, monkeypatch):
+    monkeypatch.setattr(app_module, "get_api_key", lambda *_a: "caducada")
+
+    def expired(url, key, database):
+        def server_version():
+            raise InvalidApiKeyError("401")
+
+        harness.backend.server_version = server_version
+        return harness.backend
+
+    app = harness.make(
+        AppConfig(url="https://entitat.odoo.com", output_dir=str(harness.out)), factory=expired
+    )
+    pump(harness, lambda: not app.tasks.busy and "caducat" in app.connection_status["text"])
+    assert app.connection_form.winfo_manager() == "grid"
+    assert app.url.get() == "https://entitat.odoo.com"
+    assert app.api_key.get() == ""
+
+
+@needs_display
+def test_selection_is_remembered_for_the_next_time(harness, monkeypatch):
+    app = harness.make()
+    connect(harness, app)
+    app.project.current(1)
+    app.supplier.current(1)
+    app.split.set(True)
+    app.show_names.set(True)
+    app.include_receipts.set(False)
+    app.output_dir.set(str(harness.out / "triada"))
+    project_id = app.projects[0]["id"]
+    app.on_close()
+
+    saved = AppConfig.load(harness.config_file)
+    assert saved.url == "https://entitat.odoo.com/odoo/action-1"
+    assert saved.project_id == project_id
+    assert saved.year == 2099
+    assert saved.split_quarters is True
+    assert saved.show_personnel_names is True
+    assert saved.include_receipts is False
+    assert saved.output_dir.endswith("triada")
+
+    monkeypatch.setattr(app_module, "get_api_key", lambda url: "desada")
+    harness.root = tk.Toplevel(_session_root)
+    harness.root.withdraw()
+    again = app_module.App(
+        harness.root,
+        config=saved,
+        backend_factory=lambda *_a: harness.backend,
+        config_file=harness.config_file,
+    )
+    harness.app = again
+    pump(harness, lambda: again.backend is not None and not again.tasks.busy)
+    assert again.url.get() == saved.url
+    assert again.api_key.get() == "desada"
+    assert again.projects[again.project.current() - 1]["id"] == project_id
+    assert again.split.get() is True
+    assert again.output_dir.get().endswith("triada")
+    # A forgotten supplier filter would leave an incomplete dossier.
+    assert again.supplier.current() == 0
+    # And what is remembered and reduces the dossier is said where it can't be missed.
+    assert again.filter_note.winfo_manager() == "grid"
+    assert "només el projecte" in again.filter_note["text"]
+    assert "sense els rebuts" in again.filter_note["text"]
+    assert again.options_frame.winfo_manager() == ""
+    again.tasks.wait(10)
+    again.close()
+
+
+@needs_display
+def test_closing_without_connection_keeps_the_saved_selection(harness):
+    config = AppConfig(output_dir=str(harness.out), project_id=7, year=2099, year_saved_on=2099)
+    app = harness.make(config)
+    app.on_close()
+    saved = AppConfig.load(harness.config_file)
+    assert (saved.project_id, saved.year, saved.year_saved_on) == (7, 2099, 2099)
+
+
+@needs_display
+def test_no_note_without_a_filter(harness):
+    app = harness.make()
+    connect(harness, app)
+    assert app.filter_note.winfo_manager() == ""
+    app.supplier.current(1)
+    app._refresh_filter_note()
+    assert "només el proveïdor" in app.filter_note["text"]
+    app.supplier.current(0)
+    app._refresh_filter_note()
+    assert app.filter_note.winfo_manager() == ""
+
+
+@needs_display
+def test_paste_from_the_menu_replaces_the_box_and_trims(harness):
+    app = harness.make()
+    app.api_key.set("antiga")
+    harness.root.clipboard_clear()
+    harness.root.clipboard_append("  clau-nova\n")
+    app._paste_into(app.key_entry)
+    assert app.api_key.get() == "clau-nova"
+    assert app.key_entry.bind("<Button-3>")
+
+
+@pytest.mark.parametrize(
+    ("saved_year", "saved_on", "today", "expected"),
+    [
+        (None, None, 2027, 2026),  # first time: the year just closed
+        (2027, 2027, 2027, 2027),  # chosen this year: respected
+        (2026, 2027, 2027, 2026),
+        (2025, 2026, 2027, 2026),  # chosen last year: stale, back to the year just closed
+        (2020, 2027, 2027, 2026),  # no longer on the list
+    ],
+)
+def test_year_proposal_follows_the_calendar(saved_year, saved_on, today, expected):
+    years = [2027, 2026, 2025]
+    assert app_module.choose_year(years, 2027, saved_year, saved_on, today) == expected
+
+
+def test_year_proposal_without_the_year_just_closed():
+    assert app_module.choose_year([2026], 2026, None, None, 2026) == 2026
+    assert app_module.choose_year([2099, 2026], 2099, None, None, 2026) == 2099
+    assert app_module.choose_year([2026], None, None, None, 2026) == 2026
 
 
 @needs_display
@@ -306,7 +473,8 @@ def test_cancel_stops_and_leaves_nothing(harness):
     assert harness.dialogs == [("error", "S'ha cancel·lat. No s'ha generat cap fitxer.")]
     assert not harness.out.exists() or list(harness.out.iterdir()) == []
     assert str(app.generate_button["state"]) == "normal"
-    assert str(app.cancel_button["state"]) == "disabled"
+    assert app.cancel_button.winfo_manager() == ""
+    assert app.result_frame.winfo_manager() == ""
 
 
 @needs_display
@@ -424,14 +592,14 @@ def test_key_is_really_stored_in_the_windows_vault():
     from dossier_factures import credentials
 
     assert "Windows" in type(keyring.get_keyring()).__module__
-    url, user = "https://prova-ci.invalid", "ci"
+    url = "https://prova-ci.invalid"
     try:
-        assert credentials.set_api_key(url, user, "clau-de-prova")
-        saved = keyring.get_password(credentials.APP_NAME, f"{url}|{user}")
-        assert saved == "clau-de-prova"
+        assert credentials.set_api_key(url, "clau-de-prova")
+        assert credentials.get_api_key(url) == "clau-de-prova"
+        assert keyring.get_password(credentials.APP_NAME, url) == "clau-de-prova"
     finally:
-        credentials.delete_api_key(url, user)
-    assert keyring.get_password(credentials.APP_NAME, f"{url}|{user}") is None
+        credentials.delete_api_key(url)
+    assert keyring.get_password(credentials.APP_NAME, url) is None
 
 
 def test_notice_amounts_and_dates_read_like_the_rest_of_the_application(backend):

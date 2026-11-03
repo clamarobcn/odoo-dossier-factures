@@ -99,4 +99,4 @@ def test_config_ignores_unknown_keys(tmp_path):
 
 def test_environment_variable_has_priority(monkeypatch):
     monkeypatch.setenv("ODOO_API_KEY", "from-env")
-    assert get_api_key("https://x", "u") == "from-env"
+    assert get_api_key("https://x") == "from-env"

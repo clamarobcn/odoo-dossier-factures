@@ -16,7 +16,7 @@ from .errors import (
     ServerBusyError,
     UnexpectedRedirectError,
 )
-from .json2 import Json2Backend, guess_database, normalize_base_url
+from .json2 import Json2Backend, database_from_url, normalize_base_url
 
 __all__ = [
     "READ_ONLY_METHODS",
@@ -36,7 +36,7 @@ __all__ = [
     "ServerBusyError",
     "UnexpectedRedirectError",
     "chunks",
+    "database_from_url",
     "ensure_read_only",
-    "guess_database",
     "normalize_base_url",
 ]

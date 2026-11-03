@@ -16,8 +16,6 @@ def config_path() -> Path:
 @dataclass
 class AppConfig:
     url: str = ""
-    database: str = ""
-    user: str = ""
     output_dir: str = ""
     target_dpi: int = 150
     jpeg_quality: int = 70
@@ -25,6 +23,13 @@ class AppConfig:
     include_receipts: bool = True
     include_other_expenses: bool = True
     show_personnel_names: bool = False
+    split_quarters: bool = False
+    # The last selection. The supplier is left out on purpose: it is a one-off query, and
+    # finding it still set a year later would leave an incomplete dossier.
+    company_id: int | None = None
+    project_id: int | None = None
+    year: int | None = None
+    year_saved_on: int | None = None
     # Journal name -> label of the payment form, when the journal type is not enough.
     payment_form_overrides: dict[str, str] = field(default_factory=dict)
 

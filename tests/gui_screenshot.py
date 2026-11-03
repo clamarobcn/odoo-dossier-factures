@@ -67,13 +67,23 @@ def main(out: str) -> None:
 
     app.url.set("https://entitat.odoo.com")
     app.api_key.set("clau-de-prova")
-    app.on_test()
+    app.on_connect()
     pump(root, lambda: app.backend is not None)
     capture(root, out_dir / "2-connectat.png")
 
+    app.on_toggle_options()
+    pump(root, lambda: True)
+    capture(root, out_dir / "3-opcions.png")
+    app.on_toggle_options()
+
     app.on_generate()
     pump(root, lambda: app.result is not None)
-    capture(root, out_dir / "3-resum.png")
+    capture(root, out_dir / "4-resum.png")
+
+    app.project.current(1)
+    app._refresh_filter_note()
+    pump(root, lambda: True)
+    capture(root, out_dir / "5-filtre.png")
     app.close()
 
 

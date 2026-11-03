@@ -23,7 +23,7 @@ from .extract import (
 from .formatting import format_amount
 from .i18n import t
 from .model import ExtractParams
-from .odoo_client import Json2Backend, OdooError, guess_database, normalize_base_url
+from .odoo_client import Json2Backend, OdooError, database_from_url, normalize_base_url
 from .paths import new_output_folder
 from .pdf_builder import Cancelled
 from .pipeline import GenerateOptions, NothingToGenerate, generate
@@ -34,8 +34,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="dossier-factures", description=t("cli.description"))
     parser.add_argument("--version", action="version", version=__version__)
     parser.add_argument("--url", help="Adreça d'Odoo, p. ex. https://entitat.odoo.com")
-    parser.add_argument("--db", help="Base de dades (per defecte, la de l'adreça)")
-    parser.add_argument("--user", help="Usuari o correu (per trobar la clau desada)")
+    parser.add_argument("--db", help="Base de dades, només si el servidor en té diverses")
     parser.add_argument("-v", "--verbose", action="store_true", help="Mostra el detall tècnic")
     commands = parser.add_subparsers(dest="command", required=True)
 
@@ -84,12 +83,12 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _backend(args: argparse.Namespace, config: AppConfig) -> Json2Backend:
-    url = normalize_base_url(args.url or config.url)
-    user = args.user or config.user
-    api_key = get_api_key(url, user)
+    address = args.url or config.url
+    url = normalize_base_url(address)
+    api_key = get_api_key(url)
     if not api_key:
         raise SystemExit(t("error.no_api_key"))
-    return Json2Backend(url, api_key, args.db or config.database or guess_database(url))
+    return Json2Backend(url, api_key, args.db or database_from_url(address))
 
 
 def _print_test(backend: Json2Backend) -> None:

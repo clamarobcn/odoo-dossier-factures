@@ -38,7 +38,11 @@ Real invoices also carry structural damage that readers tolerate: broken cross-r
 
 ## API
 
-- API keys last at most three months, so a yearly user always needs a new one.
+- API key duration: the creation wizard offers up to one year or a persistent key, and
+  `res.groups.api_key_duration` caps it per group (90 days for the member role here). The key
+  used for this validation, from an administrator, expires after more than 90 days.
+- The database header is optional on Odoo Online: without `X-Odoo-Database` the server resolves
+  the database from the host.
 - JSON-2 authenticates with the key alone: the user name is not sent.
 - `read` and `search_read` accept `context`; `allowed_company_ids` selects the company.
 - `/web/version` is public and needs no key.
