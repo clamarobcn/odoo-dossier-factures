@@ -5,7 +5,7 @@
   "error.insecure_url": "L'adreça d'Odoo ha de començar per https:// perquè la clau d'API no viatgi sense xifrar.",
   "error.invalid_api_key": "Odoo no accepta la clau d'API: és incorrecta o ha caducat. Creeu-ne una de nova a Odoo: el vostre nom (a dalt a la dreta) → Preferències → Seguretat → Add API Key.",
   "error.access_or_plan": "Odoo no permet aquesta consulta. Pot ser per dos motius: l'usuari de la clau no té permís de lectura a Comptabilitat, o el pla d'Odoo no inclou l'accés a l'API externa (a Odoo Online cal el pla Custom).",
-  "error.api_not_found": "No s'ha trobat l'API d'Odoo en aquesta adreça. Comproveu l'adreça i la base de dades. Cal Odoo 19 o posterior, i a Odoo Online el pla Custom.",
+  "error.api_not_found": "No s'ha trobat l'API d'Odoo en aquesta adreça. Comproveu l'adreça. Cal Odoo 19 o posterior, i a Odoo Online el pla Custom.",
   "error.unexpected_redirect": "L'adreça d'Odoo redirigeix a una altra pàgina. Comproveu que sigui l'adreça correcta.",
   "error.server_busy": "Odoo està ocupat o no respon ara mateix, fins i tot després de diversos intents. Torneu-ho a provar d'aquí a una estona.",
   "error.network": "No es pot connectar amb Odoo. Comproveu la connexió a Internet i l'adreça.",

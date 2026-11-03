@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from conftest import FIXTURES, FakeBackend
 from dossier_factures import __version__
 from dossier_factures.config import APP_NAME
+from dossier_factures.i18n import t
 from dossier_factures.odoo_client import READ_ONLY_METHODS
 from gui_scenario import fill_documents
 
@@ -105,6 +106,24 @@ def run_cli(exe: Path, server: FakeOdoo, work: Path) -> None:
     check_documents(out)
 
 
+def check_https(exe: Path, work: Path) -> None:
+    """The simulated Odoo is plain HTTP, so try the certificates on a site that isn't Odoo.
+
+    Getting as far as "no API here" means the secure connection itself worked.
+    """
+    env = {**os.environ, "ODOO_API_KEY": KEY, "APPDATA": str(work / "appdata")}
+    done = subprocess.run(
+        [exe, "--url", "https://github.com", "test"],
+        capture_output=True,
+        encoding="utf-8",
+        env=env,
+        timeout=180,
+    )
+    assert done.returncode == 2, done.returncode
+    assert t("error.network") not in done.stderr, done.stderr
+    print("https ok:", done.stderr.strip()[:60])
+
+
 def _window_box(hwnd: int) -> tuple[int, int, int, int]:
     rect = wintypes.RECT()
     ctypes.windll.user32.GetWindowRect(hwnd, ctypes.byref(rect))
@@ -150,7 +169,11 @@ def run_gui(exe: Path, server: FakeOdoo, work: Path, shots: Path) -> None:
     started = time.monotonic()
     process = subprocess.Popen([exe], env=env, cwd=work)
     try:
-        _wait(lambda: user32.FindWindowW(None, title), 120, "the window")
+        # What a person sees while the program unpacks.
+        while not user32.FindWindowW(None, title):
+            assert time.monotonic() - started < 120, "Timed out waiting for the window"
+            ImageGrab.grab().save(shots / "exe-0-arrencada.png")
+            time.sleep(0.1)
         print(f"window after {time.monotonic() - started:.1f} s")
         hwnd = user32.FindWindowW(None, title)
         _wait(lambda: server.backend.calls, 60, "the automatic connection")
@@ -195,6 +218,7 @@ def main(dist: str, shots_dir: str) -> None:
         (work / "cli").mkdir()
         (work / "gui").mkdir()
         run_cli(folder / "dossier-factures-cli.exe", server, work / "cli")
+        check_https(folder / "dossier-factures-cli.exe", work / "cli")
         server.backend.calls.clear()
         run_gui(folder / "DossierFactures.exe", server, work / "gui", shots)
         assert server.methods <= READ_ONLY_METHODS, server.methods
