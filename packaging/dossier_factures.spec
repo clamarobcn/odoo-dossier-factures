@@ -23,14 +23,14 @@ VERSION_INFO = """VSVersionInfo(
     fileType=0x1, subtype=0x0, date=(0, 0)),
   kids=[
     StringFileInfo([StringTable('040304B0', [
-      StringStruct('CompanyName', '{author}'),
-      StringStruct('FileDescription', '{description}'),
-      StringStruct('FileVersion', '{version}'),
-      StringStruct('InternalName', '{name}'),
-      StringStruct('LegalCopyright', '© 2026 {author}. Llicència MIT.'),
-      StringStruct('OriginalFilename', '{name}.exe'),
+      StringStruct('CompanyName', {author!r}),
+      StringStruct('FileDescription', {description!r}),
+      StringStruct('FileVersion', {version!r}),
+      StringStruct('InternalName', {name!r}),
+      StringStruct('LegalCopyright', {copyright!r}),
+      StringStruct('OriginalFilename', {filename!r}),
       StringStruct('ProductName', 'Dossier de factures'),
-      StringStruct('ProductVersion', '{version}')])]),
+      StringStruct('ProductVersion', {version!r})])]),
     VarFileInfo([VarStruct('Translation', [0x0403, 1200])])])
 """
 
@@ -40,7 +40,13 @@ def version_file(name, description):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         VERSION_INFO.format(
-            numbers=NUMBERS, author=AUTHOR, description=description, version=VERSION, name=name
+            numbers=NUMBERS,
+            author=AUTHOR,
+            description=description,
+            version=VERSION,
+            name=name,
+            copyright=f"© 2026 {AUTHOR}. Llicència MIT.",
+            filename=f"{name}.exe",
         ),
         encoding="utf-8",
     )

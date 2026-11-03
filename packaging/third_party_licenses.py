@@ -14,6 +14,8 @@ BUNDLED = """Also packaged, outside the Python packages listed below:
 
 - Python 3.12: Python Software Foundation License.
 - Tcl/Tk (only in DossierFactures.exe): BSD-style Tcl licence.
+- qpdf, inside pikepdf: Apache-2.0.
+- Microsoft Visual C++ runtime: redistributable under Microsoft's licence terms.
 - PyInstaller bootloader: GPL-2.0 with a special exception that allows distributing it with
   programs under any licence.
 - Bitstream Vera fonts, embedded in the generated PDFs (shipped with reportlab): Bitstream Vera

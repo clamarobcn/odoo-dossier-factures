@@ -29,6 +29,9 @@ jobs:
           REQUIRE_WINDOWS_VAULT: "1"
       - run: python packaging/third_party_licenses.py THIRD_PARTY_LICENSES.txt
       - run: pyinstaller packaging/dossier_factures.spec --noconfirm --distpath dist
+      - name: Show the version metadata
+        shell: pwsh
+        run: Get-ChildItem dist\*.exe | ForEach-Object { $_.VersionInfo | Format-List FileDescription, FileVersion, ProductName, LegalCopyright, OriginalFilename, CompanyName }
       - name: Try the programs against a simulated Odoo
         run: python tests/exe_smoke.py dist screenshots
       - name: Collect the release files
