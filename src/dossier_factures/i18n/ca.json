@@ -171,7 +171,7 @@
   "gui.title": "Dossier de factures",
   "gui.url": "Adreça",
   "gui.api_key": "Clau d'API",
-  "gui.api_key_hint": "La clau es crea a Odoo: Preferències → Seguretat del compte → Claus API. Només cal escriure-la una vegada.",
+  "gui.api_key_hint": "La clau es crea a Odoo: Preferències → Seguretat del compte → Claus API. Queda desada en aquest ordinador.",
   "gui.test": "Connectar",
   "gui.testing": "Connectant…",
   "gui.connected": "Connectat a {company}",
